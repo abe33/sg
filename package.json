@@ -1,0 +1,103 @@
+{
+  "name": "sg",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "jsnext:main": "src/index.es6",
+  "scripts": {
+    "test": "nyc mocha --timeout 5000 --recursive --compilers js:babel-register test/**/*.test.es6 test/*.test.es6",
+    "lcov_report": "nyc report --reporter=lcov",
+    "coverage": "npm run lcov_report && codecov",
+    "babel": "babel src --out-dir lib",
+    "lint": "eslint .",
+    "esdoc": "esdoc -c esdoc.json",
+    "prepublish": "npm run babel",
+    "start": "widjet-test-server test/**/*.es6"
+  },
+  "keywords": [
+    "widgets",
+    "widget",
+    "web",
+    "sg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/abe33/sg.git"
+  },
+  "bugs": "http://github.com/abe33/sg/issues",
+  "commits": "http://github.com/abe33/sg/commits",
+  "author": "Cédric Néhémie <cedric.nehemie@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-eslint": "^7.0.0",
+    "babel-register": "^6.3.13",
+    "codecov": "^1.0.0",
+    "esdoc": "^1.1.0",
+    "eslint": "^3.11.1",
+    "eslint-config": "^0.3.0",
+    "eslint-config-fbjs": "^1.1.1",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-flowtype": "^2.29.1",
+    "eslint-plugin-jasmine": "^2.2.0",
+    "eslint-plugin-prefer-object-spread": "^1.1.0",
+    "eslint-plugin-react": "^5.2.2",
+    "expect.js": "^0.3.1",
+    "fbjs": "^0.8.6",
+    "jsdom": "^9.8.3",
+    "mocha": "^5.2.0",
+    "mocha-jsdom": "^1.1.0",
+    "nyc": "^13.1.0",
+    "sinon": "^1.17.4",
+    "widjet-test-utils": "^1.7.0"
+  },
+  "dependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-plugin-transform-es3-member-expression-literals": "^6.8.0",
+    "babel-plugin-transform-es3-property-literals": "^6.8.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-custom-element-classes": "^0.1.0",
+    "babel-plugin-transform-es2015-classes": "6.24.1",
+    "babel-preset-es2015": "^6.3.13",
+    "widjet-disposables": "^0.1.7",
+    "widjet-utils": "^0.6.0"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "globals": [
+      "it",
+      "describe",
+      "beforeEach",
+      "afterEach"
+    ]
+  },
+  "babel": {
+    "sourceMaps": "inline",
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-custom-element-classes",
+      "transform-es2015-classes",
+      "transform-es3-member-expression-literals",
+      "transform-es3-property-literals"
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "nyc": {
+    "include": [
+      "src/*.es6"
+    ],
+    "extension": [
+      ".es6"
+    ],
+    "require": [
+      "babel-register"
+    ]
+  }
+}
