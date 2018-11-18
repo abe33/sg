@@ -6,7 +6,6 @@ import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import '../src/item';
 
 describe('ItemElement', () => {
-
   let item;
   describe('with plain html content', () => {
     beforeEach(() => {
@@ -186,6 +185,30 @@ describe('ItemElement', () => {
         foo: 'bar',
         bar: 'foo',
       });
+    });
+  });
+
+  describe('once connected to the DOM', () => {
+    beforeEach(() => {
+      setPageContent(`
+        <sg-item>
+          Some text content
+
+          <div class="dummy"></div>
+
+          <sg-src>
+            <div></div>
+          </sg-src>
+        </sg-item>
+        `);
+
+      item = getTestRoot().querySelector('sg-item');
+    });
+
+    it('puts the discovered content in innerHTML', () => {
+      expect(item.querySelector('sg-sample')).not.to.be(null);
+      expect(item.querySelector('sg-text')).not.to.be(null);
+      expect(item.querySelector('sg-src')).not.to.be(null);
     });
   });
 });

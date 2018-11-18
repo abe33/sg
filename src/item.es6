@@ -15,7 +15,9 @@ export default class ItemElement extends HTMLElement {
     this.gatherData();
   }
 
-  connectedCallback() {}
+  connectedCallback() {
+    this.innerHTML = this.content.join('\n');
+  }
 
   gatherData() {
     // Every node that is not a text node and not a sg-* element
