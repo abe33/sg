@@ -5,6 +5,8 @@ import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/item';
 
+const asSource = a => a.map(e => e.outerHTML);
+
 describe('ItemElement', () => {
   let item;
   describe('with plain html content', () => {
@@ -19,13 +21,18 @@ describe('ItemElement', () => {
     });
 
     it('stores its content as both sample and source', () => {
-      expect(item.samples).to.eql(['<div class="dummy"></div>']);
-      expect(item.sources).to.eql(['<div class="dummy"></div>']);
+      expect(asSource(item.samples))
+      .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+
+      expect(asSource(item.sources))
+      .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
+
       expect(item.texts).to.eql([]);
-      expect(item.content).to.eql([
+
+      expect(item.innerHTML).to.eql([
         '<sg-sample><div class="dummy"></div></sg-sample>',
-        '<sg-src><div class="dummy"></div></sg-src>',
-      ]);
+        '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+      ].join(''));
     });
   });
 
@@ -48,20 +55,27 @@ describe('ItemElement', () => {
       });
 
       it('uses the first sample as source', () => {
-        expect(item.samples).to.eql([
-          '<div class="dummy"></div>',
-          '<div></div>',
+        expect(asSource(item.samples)).to.eql([
+          '<sg-sample><div class="dummy"></div></sg-sample>',
+          `<sg-sample>
+              <div></div>
+            </sg-sample>`,
         ]);
-        expect(item.sources).to.eql(['<div class="dummy"></div>']);
-        expect(item.texts).to.eql(['Some text content']);
-        expect(item.content).to.eql([
+        expect(asSource(item.sources)).to.eql([
+          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+        ]);
+
+        expect(asSource(item.texts)).to.eql([
+          '<sg-text>Some text content</sg-text>']);
+
+        expect(item.innerHTML).to.eql([
           '<sg-text>Some text content</sg-text>',
           '<sg-sample><div class="dummy"></div></sg-sample>',
           `<sg-sample>
               <div></div>
             </sg-sample>`,
-          '<sg-src><div class="dummy"></div></sg-src>',
-        ]);
+          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+        ].join(''));
       });
     });
 
@@ -83,16 +97,18 @@ describe('ItemElement', () => {
       });
 
       it('stores its content as both sample and source', () => {
-        expect(item.samples).to.eql(['<div class="dummy"></div>']);
-        expect(item.sources).to.eql(['<div></div>']);
-        expect(item.texts).to.eql(['Some text content']);
-        expect(item.content).to.eql([
+        expect(asSource(item.samples)).to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+        expect(asSource(item.sources)).to.eql([`<sg-src>
+              <div></div>
+            </sg-src>`]);
+        expect(asSource(item.texts)).to.eql(['<sg-text>Some text content</sg-text>']);
+        expect(item.innerHTML).to.eql([
           '<sg-text>Some text content</sg-text>',
           '<sg-sample><div class="dummy"></div></sg-sample>',
           `<sg-src>
               <div></div>
             </sg-src>`,
-        ]);
+        ].join(''));
       });
     });
   });
@@ -119,10 +135,16 @@ describe('ItemElement', () => {
     });
 
     it('stores its content as both sample and source', () => {
-      expect(item.samples).to.eql(['<div class="dummy"></div>']);
-      expect(item.sources).to.eql(['<div></div>']);
-      expect(item.texts).to.eql(['Some text content']);
-      expect(item.content).to.eql([
+      expect(asSource(item.samples)).to.eql([`<sg-sample>
+            <div class="dummy"></div>
+          </sg-sample>`]);
+      expect(asSource(item.sources)).to.eql([`<sg-src>
+            <div></div>
+          </sg-src>`]);
+      expect(asSource(item.texts)).to.eql([`<sg-text>
+            Some text content
+          </sg-text>`]);
+      expect(item.innerHTML).to.eql([
         `<sg-sample>
             <div class="dummy"></div>
           </sg-sample>`,
@@ -132,7 +154,7 @@ describe('ItemElement', () => {
         `<sg-src>
             <div></div>
           </sg-src>`,
-      ]);
+      ].join(''));
     });
 
     it('preserves all attributes on the custom elements', () => {
@@ -154,7 +176,7 @@ describe('ItemElement', () => {
 
       item = getTestRoot().querySelector('sg-item');
 
-      expect(item.content).to.eql([
+      expect(item.innerHTML).to.eql([
         `<sg-sample foo="bar">
             <div class="dummy"></div>
           </sg-sample>`,
@@ -164,7 +186,7 @@ describe('ItemElement', () => {
         `<sg-src foo="bar">
             <div></div>
           </sg-src>`,
-      ]);
+      ].join(''));
     });
   });
 
@@ -205,7 +227,7 @@ describe('ItemElement', () => {
       item = getTestRoot().querySelector('sg-item');
     });
 
-    it('puts the discovered content in innerHTML', () => {
+    it('does not alter the declared content', () => {
       expect(item.querySelector('sg-sample')).not.to.be(null);
       expect(item.querySelector('sg-text')).not.to.be(null);
       expect(item.querySelector('sg-src')).not.to.be(null);

@@ -1,6 +1,6 @@
 'use strict';
 
-import {asArray} from 'widjet-utils';
+import {asArray, getNode} from 'widjet-utils';
 
 export default class ItemElement extends HTMLElement {
   constructor() {
@@ -9,17 +9,17 @@ export default class ItemElement extends HTMLElement {
     this.sources = [];
     this.samples = [];
     this.texts = [];
-    this.content = [];
     this.meta = {};
 
     this.gatherData();
   }
 
-  connectedCallback() {
-    this.innerHTML = this.content.join('\n');
-  }
+  connectedCallback() {}
 
   gatherData() {
+    // We're gathering each content node here and we'll append
+    // everything at the end.
+    const content = [];
     // Every node that is not a text node and not a sg-* element
     // will be part of a sample. We'll
     let currentSample = [];
@@ -27,8 +27,9 @@ export default class ItemElement extends HTMLElement {
     const storeCurrentSample = () => {
       if (currentSample.length) {
         const sample = currentSample.join('\n');
-        this.samples.push(sample);
-        this.content.push(`<sg-sample>${sample}</sg-sample>`);
+        const node = getNode(`<sg-sample>${sample}</sg-sample>`);
+        this.samples.push(node);
+        content.push(node);
         currentSample = [];
       }
     };
@@ -38,8 +39,9 @@ export default class ItemElement extends HTMLElement {
         case 3: {
           const nodeContent = c.textContent.trim();
           if (nodeContent !== '') {
-            this.texts.push(nodeContent);
-            this.content.push(`<sg-text>${nodeContent}</sg-text>`);
+            const node = getNode(`<sg-text>${nodeContent}</sg-text>`);
+            this.texts.push(node);
+            content.push(node);
           }
           break;
         }
@@ -47,20 +49,20 @@ export default class ItemElement extends HTMLElement {
           switch (c.nodeName.toLowerCase()) {
             case 'sg-text': {
               storeCurrentSample();
-              this.texts.push(c.innerHTML.trim());
-              this.content.push(c.outerHTML);
+              this.texts.push(c);
+              content.push(c);
               break;
             }
             case 'sg-sample': {
               storeCurrentSample();
-              this.samples.push(c.innerHTML.trim());
-              this.content.push(c.outerHTML);
+              this.samples.push(c);
+              content.push(c);
               break;
             }
             case 'sg-src': {
               storeCurrentSample();
-              this.sources.push(c.innerHTML.trim());
-              this.content.push(c.outerHTML);
+              this.sources.push(c);
+              content.push(c);
               break;
             }
             case 'sg-meta': {
@@ -87,9 +89,12 @@ export default class ItemElement extends HTMLElement {
     // If we endup with samples but no sources, the source is the first sample.
     if (this.sources.length === 0 && this.samples.length > 0) {
       const sample = this.samples[0];
-      this.sources.push(sample);
-      this.content.push(`<sg-src>${sample}</sg-src>`);
+      const node = getNode(`<sg-src lang="html">${sample.innerHTML}</sg-src>`);
+      this.sources.push(node);
+      content.push(node);
     }
+
+    content.forEach(c => this.appendChild(c));
   }
 }
 
