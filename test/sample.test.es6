@@ -198,7 +198,7 @@ describe('SampleElement', () => {
       describe('that has a slot', () => {
         beforeEach(() => {
           setPageContent(`
-            <template id="sg-sample-iframe">
+            <template id="sg-sample/iframe">
               <div class="container">
                 <slot></slot>
               </div>
@@ -221,7 +221,7 @@ describe('SampleElement', () => {
       describe('that has no slot', () => {
         beforeEach(() => {
           setPageContent(`
-            <template id="sg-sample-iframe">
+            <template id="sg-sample/iframe">
               <div class="container"></div>
             </template>
 
@@ -237,7 +237,7 @@ describe('SampleElement', () => {
 
           expect(iframe.contentDocument.body.querySelector('.container')).to.be(null);
           expect(iframe.contentDocument.body.innerHTML.trim()).to.eql([
-            '<span style="color: orange;">A #sg-sample-iframe template was found but it didn\'t have a slot.</span>',
+            '<span style="color: orange;">A #sg-sample/iframe template was found but it didn\'t have a slot.</span>',
             '<div>text</div>',
           ].join(''));
         });
@@ -248,13 +248,13 @@ describe('SampleElement', () => {
       describe('that has a slot', () => {
         beforeEach(() => {
           setPageContent(`
-            <template id="other-sample-iframe">
+            <template id="other-sample/iframe">
               <div class="container">
                 <slot></slot>
               </div>
             </template>
 
-            <sg-sample iframe iframe-template="other-sample-iframe">
+            <sg-sample iframe iframe-template="other-sample/iframe">
               <div>text</div>
             </sg-sample`);
 
@@ -271,11 +271,11 @@ describe('SampleElement', () => {
       describe('that has no slot', () => {
         beforeEach(() => {
           setPageContent(`
-            <template id="other-sample-iframe">
+            <template id="other-sample/iframe">
               <div class="container"></div>
             </template>
 
-            <sg-sample iframe iframe-template="other-sample-iframe">
+            <sg-sample iframe iframe-template="other-sample/iframe">
               <div>text</div>
             </sg-sample`);
 
@@ -287,7 +287,7 @@ describe('SampleElement', () => {
 
           expect(iframe.contentDocument.body.querySelector('.container')).to.be(null);
           expect(iframe.contentDocument.body.innerHTML.trim()).to.eql([
-            '<span style="color: orange;">A #other-sample-iframe template was found but it didn\'t have a slot.</span>',
+            '<span style="color: orange;">A #other-sample/iframe template was found but it didn\'t have a slot.</span>',
             '<div>text</div>',
           ].join(''));
         });
@@ -296,7 +296,7 @@ describe('SampleElement', () => {
       describe('and the template does not exist', () => {
         beforeEach(() => {
           setPageContent(`
-              <sg-sample iframe iframe-template="other-sample-iframe">
+              <sg-sample iframe iframe-template="other-sample/iframe">
                 <div>text</div>
               </sg-sample`);
 
@@ -308,7 +308,7 @@ describe('SampleElement', () => {
 
           expect(iframe.contentDocument.body.querySelector('.container')).to.be(null);
           expect(iframe.contentDocument.body.innerHTML.trim()).to.eql([
-            '<span style="color: orange;">The specified template #other-sample-iframe was not found.</span>',
+            '<span style="color: orange;">The specified template #other-sample/iframe was not found.</span>',
             '<div>text</div>',
           ].join(''));
         });

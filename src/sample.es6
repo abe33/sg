@@ -57,7 +57,7 @@ export default class SampleElement extends HTMLElement {
 
     const tplId = this.hasAttribute('iframe-template')
       ? this.getAttribute('iframe-template')
-      : 'sg-sample-iframe';
+      : 'sg-sample/iframe';
     const tpl = document.getElementById(tplId);
 
     if (tpl) {
