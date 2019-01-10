@@ -77,16 +77,58 @@ Once created an item node will have a bunch of properties that are derived from 
 
 |Property|Type|Description|
 |---|---|---|
-|`content`|`array<string>`|An array containing all the discovered parts of that item. Note that the parts have been converted into the markup of the corresponding custom element. For instance, a simple empty div node will appear as `<sg-sample><div></div><sg-sample>` in the content list.|
-|`samples`|`array<string>`|An array containing the HTML sources of all the samples found in that item.|
-|`sources`|`array<string>`|An array containing all the sources found in that item.|
-|`texts`|`array<string>`|An array containing all the non-sources, non-samples texts found in that item.|
+|`content`|`array<HTMLElement>`|An array containing all the discovered parts of that item.|
+|`samples`|`array<SampleElement>`|An array containing the sample objects in that item.|
+|`sources`|`array<SourceElement>`|An array containing all the sources found in that item.|
+|`texts`|`array<TextElement>`|An array containing all the non-sources, non-samples texts found in that item.|
 |`meta`|`object`|An object containing all the meta discovered in that item.|
 
-#### Notes on Custom Elements Lifecycle
 
-You may have noticed that the properties listed above mostly contains HTML strings instead of node references. We're using the custom element lifecycle to produces these strings while removing the original nodes from the DOM.
-More precisely, we're are performing all that data gathering operation in the item's constructor function and while all the sub elements constructor can have been invoked, the `connectedCallback` hook hasn't.
-That allows to have all these sub elements that serve two purposes:
-1. Defining the role a given HTML snippet will have (example, documentation, source, metadata) during the construction phase.
-2. Rendering their content while using more complex structure during the connection phase.
+#### Sample Attributes
+
+|Attribute|Description|
+|---|---|
+|`iframe`|Instead of placing the sample content in the current page, an iframe is created and the content is placed inside it.|
+|`template`|The `id` of the template to use for this sample's content'.|
+|`iframe-template`|The `id` of the template to use for this sample's iframe content.|
+
+#### Specifying Templates
+
+Every nodes support templates and slots. The default template for a node must have an `id` matching the target node's name (i.e. `sg-item` for the `sg-item` node). Templates must have a slot, otherwise the template will be ignored and a warning will be displayed alongside the content. This is to ensure that the content will always be visible as using a template implies creating a shadow root for that element and in that case not having a slot would mean the content would simply be hidden.
+
+```html
+<template id="sg-sample">
+  <div class="container">
+    <slot></slot>
+  </div>
+</template>
+
+<template id="sg-sample/iframe">
+  <div class="container">
+    <slot></slot>
+  </div>
+</template>
+
+<sg-sample>…</sg-sample>
+<sg-sample iframe>…</sg-sample>
+```
+
+In the example above, the page contains two `template` that will be used as the default template for a `sg-sample` element. In that case the `sg-sample/iframe` template will be used as the template for the content of the iframe of sample having the `iframe` attribute.
+
+```html
+<template id="template-id">
+  <div class="container">
+    <slot></slot>
+  </div>
+</template>
+<template id="template-id/iframe">
+  <div class="container">
+    <slot></slot>
+  </div>
+</template>
+
+<sg-sample template="template-id">…</sg-sample>
+<sg-sample iframe iframe-template="template-id/iframe">…</sg-sample>
+```
+
+And in the previous example, some custom templates are defined and affected to specific `sg-sample` nodes through their `template` and `iframe-template` attributes.
