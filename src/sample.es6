@@ -1,6 +1,7 @@
 'use strict';
 
 import {asArray} from 'widjet-utils';
+import HasTemplateElement from './has-template';
 
 const getContentAsFragment = (node) => {
   const fragment = document.createDocumentFragment();
@@ -11,7 +12,7 @@ const getContentAsFragment = (node) => {
   return fragment;
 };
 
-export default class SampleElement extends HTMLElement {
+export default class SampleElement extends HasTemplateElement {
   constructor() {
     super();
 
@@ -19,36 +20,10 @@ export default class SampleElement extends HTMLElement {
       this.buildIframe();
     }
 
-    this.consumeTemplate();
+    this.consumeTemplate('sg-sample');
   }
 
   connectedCallback() {}
-
-  consumeTemplate() {
-    const tplId = this.hasAttribute('template')
-      ? this.getAttribute('template')
-      : 'sg-sample';
-
-    const tpl = document.getElementById(tplId);
-
-    if (tpl) {
-      const templateContent = tpl.content;
-
-      const shadowRoot = this.attachShadow({mode: 'open'});
-      if (!templateContent.querySelector('slot')) {
-        shadowRoot.innerHTML = `
-          <slot></slot>
-          <span style="color: orange;">A #${tplId} template was found but it didn\'t have a slot.</span>`;
-      } else {
-        shadowRoot.appendChild(templateContent.cloneNode(true));
-      }
-    } else if (this.hasAttribute('template')) {
-      const shadowRoot = this.attachShadow({mode: 'open'});
-      shadowRoot.innerHTML = `
-        <slot></slot>
-        <span style="color: orange;">The specified template #${tplId} was not found.</span>`;
-    }
-  }
 
   buildIframe() {
     let content;

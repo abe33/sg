@@ -233,4 +233,128 @@ describe('ItemElement', () => {
       expect(item.querySelector('sg-src')).not.to.be(null);
     });
   });
+
+  describe('when a template is defined', () => {
+    const itemContent = [
+      '<sg-sample><div>text</div></sg-sample>',
+      '<sg-src lang="html"><div>text</div></sg-src>',
+    ].join('');
+
+    describe('and uses the default "sg-item" id', () => {
+      describe('and provides a default slot', () => {
+        beforeEach(() => {
+          setPageContent(`
+            <template id="sg-item">
+              <div class="container">
+                <slot></slot>
+              </div>
+            </template>
+
+            <sg-item>
+              <div>text</div>
+            </sg-item`);
+
+          item = getTestRoot().querySelector('sg-item');
+        });
+
+        it('creates a shadow root and uses the provided template', () => {
+          expect(item.innerHTML.trim()).to.eql(itemContent);
+
+          expect(item.shadowRoot).not.to.be(null);
+
+          expect(item.shadowRoot.querySelector('.container')).not.to.be(null);
+        });
+      });
+      describe('and provides no slot', () => {
+        beforeEach(() => {
+          setPageContent(`
+              <template id="sg-item">
+                <div class="container"></div>
+              </template>
+
+              <sg-item>
+                <div>text</div>
+              </sg-item`);
+
+          item = getTestRoot().querySelector('sg-item');
+        });
+
+        it('appends a notice message regarding the template in the ', () => {
+          expect(item.innerHTML.trim()).to.eql(itemContent);
+          expect(item.shadowRoot.innerHTML)
+          .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">A #sg-item template was found but it didn\'t have a slot.</span>`);
+        });
+      });
+    });
+
+    describe('and uses another id', () => {
+      describe('and provides a default slot', () => {
+        beforeEach(() => {
+          setPageContent(`
+            <template id="other-item">
+              <div class="container">
+                <slot></slot>
+              </div>
+            </template>
+
+            <sg-item template="other-item">
+              <div>text</div>
+            </sg-item`);
+
+          item = getTestRoot().querySelector('sg-item');
+        });
+
+        it('creates a shadow root and uses the provided template', () => {
+          expect(item.innerHTML.trim()).to.eql(itemContent);
+
+          expect(item.shadowRoot).not.to.be(null);
+
+          expect(item.shadowRoot.querySelector('.container')).not.to.be(null);
+        });
+      });
+      describe('and provides no slot', () => {
+        beforeEach(() => {
+          setPageContent(`
+              <template id="other-item">
+                <div class="container"></div>
+              </template>
+
+              <sg-item template="other-item">
+                <div>text</div>
+              </sg-item`);
+
+          item = getTestRoot().querySelector('sg-item');
+        });
+
+        it('appends a notice message regarding the template in the ', () => {
+          expect(item.innerHTML.trim()).to.eql(itemContent);
+          expect(item.shadowRoot.innerHTML)
+          .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">A #other-item template was found but it didn\'t have a slot.</span>`);
+        });
+      });
+
+      describe('and the template does not exist', () => {
+        beforeEach(() => {
+          setPageContent(`
+              <sg-item template="other-item">
+                <div>text</div>
+              </sg-item`);
+
+          item = getTestRoot().querySelector('sg-item');
+        });
+
+        it('appends a notice message regarding the template in the ', () => {
+          expect(item.innerHTML.trim()).to.eql(itemContent);
+          expect(item.shadowRoot.innerHTML)
+          .to.eql(`
+        <slot></slot>
+        <span style="color: orange;">The specified template #other-item was not found.</span>`);
+        });
+      });
+    });
+  });
 });

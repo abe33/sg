@@ -1,8 +1,9 @@
 'use strict';
 
 import {asArray, getNode} from 'widjet-utils';
+import HasTemplateElement from './has-template';
 
-export default class ItemElement extends HTMLElement {
+export default class ItemElement extends HasTemplateElement {
   constructor() {
     super();
 
@@ -11,10 +12,11 @@ export default class ItemElement extends HTMLElement {
     this.texts = [];
     this.meta = {};
 
-    this.gatherData();
-  }
+    const content = this.gatherData();
+    this.consumeTemplate('sg-item');
 
-  connectedCallback() {}
+    content.forEach(c => this.appendChild(c));
+  }
 
   gatherData() {
     // We're gathering each content node here and we'll append
@@ -94,7 +96,7 @@ export default class ItemElement extends HTMLElement {
       content.push(node);
     }
 
-    content.forEach(c => this.appendChild(c));
+    return content;
   }
 }
 
