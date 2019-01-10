@@ -3,3 +3,5 @@ pages
 lib
 .nyc_output
 coverage
+*.sublime-project
+*.sublime-workspace
