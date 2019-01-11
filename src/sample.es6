@@ -12,7 +12,9 @@ export default class SampleElement extends HasTemplateElement {
       this.buildIframe();
     }
 
-    this.consumeTemplate('sg-sample');
+    this.consumeTemplate({
+      defaultTemplateId: 'sg-sample',
+    });
   }
 
   connectedCallback() {}

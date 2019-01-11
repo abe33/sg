@@ -13,7 +13,10 @@ export default class ItemElement extends HasTemplateElement {
     this.meta = {};
 
     const content = this.gatherData();
-    this.consumeTemplate('sg-item');
+
+    this.consumeTemplate({
+      defaultTemplateId: 'sg-item'
+    });
 
     content.forEach(c => this.appendChild(c));
   }

@@ -1,10 +1,18 @@
 'use strict';
 
+import {merge} from 'widjet-utils';
+
+const DEFAULT_OPTIONS = {
+  mandatorySlot: true,
+}
+
 export default class HasTemplateElement extends HTMLElement {
-  consumeTemplate(defaultTemplateId) {
+  consumeTemplate(options={}) {
+    options = merge(DEFAULT_OPTIONS, options);
+
     const tplId = this.hasAttribute('template')
       ? this.getAttribute('template')
-      : defaultTemplateId;
+      : options.defaultTemplateId;
 
     const tpl = document.getElementById(tplId);
 
@@ -12,7 +20,7 @@ export default class HasTemplateElement extends HTMLElement {
       const templateContent = tpl.content;
 
       const shadowRoot = this.attachShadow({mode: 'open'});
-      if (!templateContent.querySelector('slot')) {
+      if (options.mandatorySlot && !templateContent.querySelector('slot')) {
         shadowRoot.innerHTML = `
           <slot></slot>
           <span style="color: orange;">A #${tplId} template was found but it didn\'t have a slot.</span>`;
