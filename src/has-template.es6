@@ -32,6 +32,10 @@ export default class HasTemplateElement extends HTMLElement {
       shadowRoot.innerHTML = `
         <slot></slot>
         <span style="color: orange;">The specified template #${tplId} was not found.</span>`;
+    } else {
+      this.renderDefaultTemplate();
     }
   }
+
+  renderDefaultTemplate() {}
 }
