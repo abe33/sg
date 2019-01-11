@@ -1,6 +1,6 @@
 'use strict';
 
-import {merge} from 'widjet-utils';
+import {asArray, merge} from 'widjet-utils';
 
 const DEFAULT_OPTIONS = {
   mandatorySlot: true,
@@ -25,7 +25,28 @@ export default class HasTemplateElement extends HTMLElement {
           <slot></slot>
           <span style="color: orange;">A #${tplId} template was found but it didn\'t have a slot.</span>`;
       } else {
-        shadowRoot.appendChild(templateContent.cloneNode(true));
+        // Shadow DOM v1 don't allow a script in a template to be affected
+        // to currentScript and no API exists to access neither the host or
+        // the root of that script node. What we're doing is to basically
+        // adds these values as local constants retrieved from the window
+        // object. Once the scripts have been added to the element, the
+        // windows properties are removed.
+        const clone = templateContent.cloneNode(true);
+        const scripts = asArray(clone.querySelectorAll('script'));
+        if(scripts.length) {
+          window.currentRoot = shadowRoot;
+          window.currentHost = this;
+          scripts.forEach(s=> {
+            s.textContent = `
+            const currentRoot = window.currentRoot;
+            const currentHost = window.currentHost;
+            ${s.textContent}`;
+          })
+        }
+        shadowRoot.appendChild(clone);
+
+        delete window.currentRoot;
+        delete window.currentHost;
       }
     } else if (this.hasAttribute('template')) {
       const shadowRoot = this.attachShadow({mode: 'open'});

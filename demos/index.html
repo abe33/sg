@@ -2,13 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-
   </head>
 
   <body>
     <sg-item>
       <button>Some text</button>
     </sg-item>
+
+    <template id="sg-src">
+      <pre><code></code></pre>
+      <script type="text/javascript">
+        const code = currentRoot.querySelector('code');
+        code.textContent = currentHost.innerHTML;
+      </script>
+    </template>
 
     <script type="text/javascript" src="../lib/index.js"></script>
   </body>
