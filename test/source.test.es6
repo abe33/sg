@@ -23,7 +23,7 @@ describe('SourceElement', () => {
       setPageContent(`
         <sg-src>
           <div>text</div>
-        </sg-src`);
+        </sg-src>`);
 
       src = getTestRoot().querySelector('sg-src');
     });
@@ -56,7 +56,7 @@ describe('SourceElement', () => {
         testContainer.innerHTML = `
         <sg-src>
           <div>text</div>
-        </sg-src`;
+        </sg-src>`;
 
         src = getTestRoot().querySelector('sg-src');
       });
@@ -88,7 +88,7 @@ describe('SourceElement', () => {
         testContainer.innerHTML = `
         <sg-src template="other-src">
           <div>text</div>
-        </sg-src`;
+        </sg-src>`;
 
         src = getTestRoot().querySelector('sg-src');
       });
@@ -108,7 +108,7 @@ describe('SourceElement', () => {
         setPageContent(`
           <sg-src template="other-src">
             <div>text</div>
-          </sg-src`);
+          </sg-src>`);
 
         src = getTestRoot().querySelector('sg-src');
       });
