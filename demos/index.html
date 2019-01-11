@@ -2,6 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js" type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/twig.min.js" type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js" type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scss.min.js" type='text/javascript'></script>
   </head>
 
   <body>
@@ -12,8 +17,10 @@
     <template id="sg-src">
       <pre><code></code></pre>
       <script type="text/javascript">
+        const lang = currentHost.getAttribute('lang') || 'html';
         const code = currentRoot.querySelector('code');
-        code.textContent = currentHost.innerHTML;
+
+        code.innerHTML = hljs.highlight(lang, currentHost.innerHTML).value;
       </script>
     </template>
 

@@ -136,3 +136,27 @@ In the example above, the page contains two `template` that will be used as the 
 ```
 
 And in the previous example, some custom templates are defined and affected to specific `sg-sample` nodes through their `template` and `iframe-template` attributes.
+
+##### Using a Source template to plug a code highlighter
+
+This library uses a little hack for scripts defined inside a template.
+All scripts will be prepended with definitions for two constants that will expose to the script the shadow root and the host node. This allows template scripts to be aware of the context and make extra operations on that context.
+
+One interesting example is to use a template script to implement the support for an external code highlighter to render the content of a `sg-src` node:
+
+```html
+<template id="sg-src">
+  <pre><code></code></pre>
+  <script type="text/javascript">
+    const lang = currentHost.getAttribute('lang') || 'html';
+    const code = currentRoot.querySelector('code');
+    const source = currentHost.innerHTML;
+
+    code.innerHTML = hljs.highlight(lang, source).value;
+  </script>
+</template>
+
+sg-item>
+  <button>Some text</button>
+</sg-item>
+```
