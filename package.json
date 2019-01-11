@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "esdoc": "esdoc -c esdoc.json",
     "prepublish": "npm run rollup",
-    "rollup": "rollup -c && babel lib/index.es6 > lib/index.js",
+    "rollup": "rollup -c",
     "start": "widjet-test-server test/**/*.es6"
   },
   "keywords": [

@@ -6,7 +6,7 @@ import includePaths from 'rollup-plugin-includepaths';
 
 export default {
   entry: 'src/index.es6',
-  dest: 'lib/index.es6',
+  dest: 'lib/index.js',
   moduleName: 'sg',
   plugins: [
     includePaths({
