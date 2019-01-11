@@ -1,6 +1,10 @@
 
 This library relies on [Custom Elements](https://www.caniuse.com/#feat=custom-elementsv1) and [Shadow DOM](https://www.caniuse.com/#feat=shadowdomv1). You can provide polyfills if you need to extend the support to other browsers.
 
+### Usage
+
+Just include the script at the bottom of the HTML page. Being placed at the bottom allows all custom elements to be initialized with their content already parsed by the browser. When placed in the head, the custom elements placed in the body will be initialized immediately during parsing and their content won't be available in the constructor.
+
 ### Items
 
 Items are our smallest building block. In its most simple form it will look like this:

@@ -26,11 +26,12 @@ export default class HasTemplateElement extends HTMLElement {
           <span style="color: orange;">A #${tplId} template was found but it didn\'t have a slot.</span>`;
       } else {
         // Shadow DOM v1 don't allow a script in a template to be affected
-        // to currentScript and no API exists to access neither the host or
-        // the root of that script node. What we're doing is to basically
-        // adds these values as local constants retrieved from the window
-        // object. Once the scripts have been added to the element, the
-        // windows properties are removed.
+        // to currentScript and no API exists to access neither the host node
+        // or the shadow root of that script node.
+        // What we're doing is to basically adds these values as local
+        // constants retrieved from the window object.
+        // Once the scripts have been added to the element, the windows
+        // properties are removed.
         const clone = templateContent.cloneNode(true);
         const scripts = asArray(clone.querySelectorAll('script'));
         if(scripts.length) {
