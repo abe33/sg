@@ -7,10 +7,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/twig.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scss.min.js" type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.0/marked.min.js" type='text/javascript'></script>
   </head>
 
   <body>
     <sg-item>
+      ### Some Button Example
+
+      This is a small example of a styleguide item with simple markdown description as well as a sample.
+
       <button>Some text</button>
     </sg-item>
 
@@ -21,6 +26,15 @@
         const code = currentRoot.querySelector('code');
 
         code.innerHTML = hljs.highlight(lang, currentHost.innerHTML).value;
+      </script>
+    </template>
+
+    <template id="sg-text">
+      <div class="marked"></div>
+      <script type="text/javascript">
+        const code = currentRoot.querySelector('.marked');
+
+        code.innerHTML = marked(currentHost.innerHTML);
       </script>
     </template>
 
