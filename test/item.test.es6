@@ -66,10 +66,16 @@ describe('ItemElement', () => {
         ]);
 
         expect(asSource(item.texts)).to.eql([
-          '<sg-text>Some text content</sg-text>']);
+          `<sg-text>
+            Some text content
+
+            </sg-text>`]);
 
         expect(item.innerHTML).to.eql([
-          '<sg-text>Some text content</sg-text>',
+          `<sg-text>
+            Some text content
+
+            </sg-text>`,
           '<sg-sample><div class="dummy"></div></sg-sample>',
           `<sg-sample>
               <div></div>
@@ -101,10 +107,16 @@ describe('ItemElement', () => {
         expect(asSource(item.sources)).to.eql([`<sg-src>
               <div></div>
             </sg-src>`]);
-        expect(asSource(item.texts)).to.eql(['<sg-text>Some text content</sg-text>']);
+        expect(asSource(item.texts)).to.eql([`<sg-text>
+            Some text content
+
+            </sg-text>`]);
         expect(item.innerHTML).to.eql([
-          '<sg-text>Some text content</sg-text>',
-          '<sg-sample><div class="dummy"></div></sg-sample>',
+          `<sg-text>
+            Some text content
+
+            </sg-text>`,
+          `<sg-sample><div class="dummy"></div></sg-sample>`,
           `<sg-src>
               <div></div>
             </sg-src>`,

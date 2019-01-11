@@ -16,6 +16,12 @@
 
       This is a small example of a styleguide item with simple markdown description as well as a sample.
 
+      ```js
+      function foo () {
+        return 'foo';
+      }
+      ```
+
       <button>Some text</button>
     </sg-item>
 
@@ -33,8 +39,11 @@
       <div class="marked"></div>
       <script type="text/javascript">
         const code = currentRoot.querySelector('.marked');
+        let source = currentHost.innerHTML;
+        const [, baseIndent] = source.match(/^[\n]*(\s+)/);
+        source = source.replace(new RegExp(`^${baseIndent}`, 'gm'), '');
 
-        code.innerHTML = marked(currentHost.innerHTML);
+        code.innerHTML = marked(source);
       </script>
     </template>
 

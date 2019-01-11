@@ -43,8 +43,8 @@ export default class ItemElement extends HasTemplateElement {
     asArray(this.childNodes).forEach(c => {
       switch (c.nodeType) {
         case 3: {
-          const nodeContent = c.textContent.trim();
-          if (nodeContent !== '') {
+          const nodeContent = c.textContent;
+          if (nodeContent.trim() !== '') {
             const node = getNode(`<sg-text>${nodeContent}</sg-text>`);
             this.texts.push(node);
             content.push(node);
