@@ -2,6 +2,7 @@
 
 import {asArray, getNode} from 'widjet-utils';
 import HasTemplateElement from './has-template';
+import parseValue from './utils/parseValue';
 
 export default class ItemElement extends HasTemplateElement {
   constructor() {
@@ -74,8 +75,9 @@ export default class ItemElement extends HasTemplateElement {
               storeCurrentSample();
               const name = c.getAttribute('name');
               const content = c.getAttribute('content');
+              const type = c.getAttribute('type') || 'string';
               if (name && content) {
-                this.meta[name] = content;
+                this.meta[name] = parseValue(content, type);
               }
               break;
             }

@@ -72,7 +72,7 @@ Again, many things to note about that example:
 - if a text section contains HTML formatting it must be place
 d inside a `sg-text` node. As the lightweight declaration assumes that text nodes are descriptions and non `sg-*` elements are examples the formatting would end up being used as an example.
 - samples can also be defined using a `sg-sample` node. Just as with text, this helps if your example imply mixing text and element nodes.
-- `sg-meta` nodes can be used to define whatever additional information you want to provide along an item. These information will be available on a `meta` property on the node itself.
+- `sg-meta` nodes can be used to define whatever additional information you want to provide along an item. These information will be available on a `meta` property on the node itself. Meta nodes can receive a `type` attribute to parse the value before storing it. Allowed values are `boolean`, `number` and `string`.
 - `sg-src` nodes can take a `lang` attribute. It comes in handy if you want to plug in a code highlighter. Unless specified, all sources are assumed being HTML.
 
 #### Item Properties

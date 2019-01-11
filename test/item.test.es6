@@ -194,8 +194,9 @@ describe('ItemElement', () => {
     beforeEach(() => {
       setPageContent(`
         <sg-item>
-          <sg-meta name="foo" content="bar"></sg-meta>
-          <sg-meta name="bar" content="foo"></sg-meta>
+          <sg-meta name="string" content="foo"></sg-meta>
+          <sg-meta name="bool" content="true" type="boolean"></sg-meta>
+          <sg-meta name="number" content="15.5" type="number"></sg-meta>
         </sg-item>
       `);
 
@@ -204,8 +205,9 @@ describe('ItemElement', () => {
 
     it('fills the meta property of the node with the data from the meta', () => {
       expect(item.meta).to.eql({
-        foo: 'bar',
-        bar: 'foo',
+        string: 'foo',
+        bool: true,
+        number: 15.5,
       });
     });
   });
