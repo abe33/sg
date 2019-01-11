@@ -1,10 +1,10 @@
 'use strict';
 
-import Item from './item';
-import Sample from './sample';
-import Source from './source';
-import Text from './text';
+import ItemElement from './item';
+import SampleElement from './sample';
+import SourceElement from './source';
+import TextElement from './text';
 
-const sg = {Item, Sample, Source, Text};
+const sg = {ItemElement, SampleElement, SourceElement, TextElement};
 
 export default sg;
