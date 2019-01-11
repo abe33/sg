@@ -2,15 +2,7 @@
 
 import {asArray} from 'widjet-utils';
 import HasTemplateElement from './has-template';
-
-const getContentAsFragment = (node) => {
-  const fragment = document.createDocumentFragment();
-  asArray(node.childNodes).forEach(n => {
-    fragment.appendChild(n);
-  });
-
-  return fragment;
-};
+import getContentAsFragment from './utils/getContentAsFragment';
 
 export default class SampleElement extends HasTemplateElement {
   constructor() {
