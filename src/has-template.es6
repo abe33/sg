@@ -39,9 +39,11 @@ export default class HasTemplateElement extends HTMLElement {
           window.currentHost = this;
           scripts.forEach(s=> {
             s.textContent = `
+            (function () {
             const currentRoot = window.currentRoot;
             const currentHost = window.currentHost;
-            ${s.textContent}`;
+            ${s.textContent}
+            })();`;
           })
         }
         shadowRoot.appendChild(clone);
