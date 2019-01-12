@@ -1,10 +1,11 @@
 'use strict';
 
 import {asArray} from 'widjet-utils';
-import HasTemplateElement from './has-template';
+import HasTemplate from './has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
+import mix from './utils/mix';
 
-export default class SourceElement extends HasTemplateElement {
+export default class SourceElement extends mix(HTMLElement).with(HasTemplate) {
   constructor() {
     super();
 

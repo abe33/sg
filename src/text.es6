@@ -1,8 +1,9 @@
 'use strict';
 
-import HasTemplateElement from './has-template';
+import HasTemplate from './has-template';
+import mix from './utils/mix';
 
-export default class TextElement extends HasTemplateElement {
+export default class TextElement extends mix(HTMLElement).with(HasTemplate) {
   constructor() {
     super();
 
