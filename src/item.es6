@@ -2,10 +2,11 @@
 
 import {asArray, getNode} from 'widjet-utils';
 import HasTemplate from './has-template';
+import HasPreview from './has-preview';
 import parseValue from './utils/parseValue';
 import mix from './utils/mix';
 
-export default class ItemElement extends mix(HTMLElement).with(HasTemplate) {
+export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview) {
   constructor() {
     super();
 
@@ -21,6 +22,10 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate) {
     });
 
     content.forEach(c => this.appendChild(c));
+  }
+
+  getPreview() {
+    return super.getPreview(this.samples[0]);
   }
 
   gatherData() {

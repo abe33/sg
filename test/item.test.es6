@@ -248,6 +248,28 @@ describe('ItemElement', () => {
     });
   });
 
+  describe('.getPreview()', () => {
+    describe('when there are many samples', () => {
+      beforeEach(() => {
+        setPageContent(`
+        <sg-item>
+          <sg-sample><div>foo</div></sg-sample>
+          <sg-sample><div>bar</div></sg-sample>
+        </sg-item>
+        `);
+
+        item = getTestRoot().querySelector('sg-item');
+      });
+
+      it('returns a sg-preview object with the first sample as content', () => {
+        const preview = item.getPreview();
+
+        expect(preview.querySelector('div').textContent).to.eql('foo');
+        expect(preview.querySelectorAll('div').length).to.eql(1);
+      });
+    });
+  });
+
   describe('when a template is defined', () => {
     const itemContent = [
       '<sg-sample><div>text</div></sg-sample>',

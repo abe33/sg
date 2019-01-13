@@ -8,6 +8,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scss.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.0/marked.min.js" type='text/javascript'></script>
+
+    <link href="//db.onlinewebfonts.com/c/0a47d822ebef476322ae0428f93d4e89?family=Redacted" rel="stylesheet" type="text/css"/>
+
+    <style type="text/css">
+      button {
+        appearance: none;
+        font-size: 1.2em;
+        background: lightslategray;
+        border: 1px solid slategray;
+        padding: 0.2em 0.6em;
+      }
+      sg-preview {
+        display: inline-block;
+        vertical-align: middle;
+        float: left;
+        margin-right: 8px;
+      }
+      sg-preview svg {
+        height: 32px;
+      }
+      sg-preview * {
+        font-family: 'Redacted';
+      }
+    </style>
   </head>
 
   <body>
@@ -21,6 +45,11 @@
         </tr>
       </table>
 
+      <script type="text/javascript">
+        const preview = currentHost.getPreview();
+        preview.setAttribute('slot','header');
+        currentHost.appendChild(preview);
+      </script>
     </template>
 
     <template id="sg-src">
@@ -34,6 +63,11 @@
     </template>
 
     <template id="sg-text">
+      <style type="text/css">
+        h3 {
+          margin: 0;
+        }
+      </style>
       <div class="marked"></div>
       <script type="text/javascript">
         const code = currentRoot.querySelector('.marked');
