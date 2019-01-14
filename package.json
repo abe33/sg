@@ -12,7 +12,7 @@
     "esdoc": "esdoc -c esdoc.json",
     "prepublish": "npm run rollup",
     "rollup": "rollup -c",
-    "start": "widjet-test-server test/**/*.es6"
+    "start": "widjet-test-server test/**/*.test.es6"
   },
   "keywords": [
     "widgets",
