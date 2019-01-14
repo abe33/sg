@@ -455,4 +455,42 @@ describe('ItemElement', () => {
       });
     });
   });
+
+  describe('samples-slot attribute', () => {
+    it('sets the slot attribute on generated samples', () => {
+      setPageContent(`
+        <sg-item samples-slot="name">
+          <div class="dummy"></div>
+        </sg-item>
+      `);
+
+      item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-sample').getAttribute('slot')).to.eql('name');
+    });
+  });
+  describe('sources-slot attribute', () => {
+    it('sets the slot attribute on generated sources', () => {
+      setPageContent(`
+        <sg-item sources-slot="name">
+          <div class="dummy"></div>
+        </sg-item>
+      `);
+
+      item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-src').getAttribute('slot')).to.eql('name');
+    });
+  });
+  describe('texts-slot attribute', () => {
+    it('sets the slot attribute on generated texts', () => {
+      setPageContent(`
+        <sg-item texts-slot="name">
+          Some text
+          <div class="dummy"></div>
+        </sg-item>
+      `);
+
+      item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
+    });
+  });
 });

@@ -1,11 +1,18 @@
 'use strict';
 
 import {asArray, getNode} from 'widjet-utils';
+import {forName, copyAttribute} from './utils/attributes';
 import HasTemplate from './has-template';
 import HasPreview from './has-preview';
 import HasLazyContent from './has-lazy-content';
 import parseValue from './utils/parseValue';
 import mix from './utils/mix';
+
+const ATTRIBUTES_MAP = {
+  'samples-slot': forName('sg-sample', copyAttribute('samples-slot', 'slot')),
+  'texts-slot': forName('sg-text', copyAttribute('texts-slot', 'slot')),
+  'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
+}
 
 export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasLazyContent) {
 
@@ -49,6 +56,12 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     this.consumeTemplate({
       defaultTemplateId: 'sg-item'
     });
+
+    for (const attr in ATTRIBUTES_MAP) {
+      if(this.hasAttribute(attr)) {
+        ATTRIBUTES_MAP[attr](content, this);
+      }
+    }
 
     content.forEach(c => this.appendChild(c));
   }
