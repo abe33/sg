@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
 
+    <script type="text/javascript" src="../lib/index.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/twig.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js" type='text/javascript'></script>
@@ -45,21 +47,21 @@
         </tr>
       </table>
 
-      <script type="text/javascript">
-        const preview = currentHost.getPreview();
-        preview.setAttribute('slot','header');
-        currentHost.appendChild(preview);
-      </script>
+        <sg-script>
+          const preview = currentHost.getPreview();
+          preview.setAttribute('slot','header');
+          currentHost.appendChild(preview);
+        </sg-script>
     </template>
 
     <template id="sg-src">
       <pre><code></code></pre>
-      <script type="text/javascript">
+      <sg-script type="text/javascript">
         const lang = currentHost.getAttribute('lang') || 'html';
         const code = currentRoot.querySelector('code');
 
         code.innerHTML = hljs.highlight(lang, currentHost.innerHTML.trim()).value;
-      </script>
+      </sg-script>
     </template>
 
     <template id="sg-text">
@@ -69,7 +71,7 @@
         }
       </style>
       <div class="marked"></div>
-      <script type="text/javascript">
+      <sg-script type="text/javascript">
         const code = currentRoot.querySelector('.marked');
         let source = currentHost.innerHTML;
         const match = source.match(/^[\n]*(\s+)/);
@@ -80,7 +82,7 @@
         }
 
         code.innerHTML = marked(source);
-      </script>
+      </sg-script>
     </template>
 
     <sg-item>
@@ -107,7 +109,5 @@
         <button>Some text</button>
       </sg-src>
     </sg-item>
-
-    <script type="text/javascript" src="../lib/index.js"></script>
   </body>
 </html>
