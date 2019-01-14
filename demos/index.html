@@ -28,7 +28,8 @@
         margin-right: 8px;
       }
       sg-preview svg {
-        height: 32px;
+        max-height: 32px;
+        max-width: 32px;
       }
       sg-preview * {
         font-family: 'Redacted';
@@ -85,7 +86,6 @@
       </sg-script>
     </template>
 
-    <sg-group>
     <sg-item>
       ### Some Button Example
 
@@ -99,17 +99,33 @@
 
       <button>Some text</button>
     </sg-item>
+
+    <sg-group template="right-col-sample" samples-slot="right-col" texts-slot="left-col" sources-slot="left-col">
+      <sg-item>
+        ### Some Button Example
+
+        This is a small example of a styleguide item with simple markdown description as well as a code sample in plain text and the remaining content as sample.
+
+        ```js
+        function foo () {
+          return 'foo';
+        }
+        ```
+
+        <button>Some text</button>
+      </sg-item>
+
+      <sg-item>
+        <sg-text slot="header">### Some title for a heavy setup</sg-text>
+        <sg-sample slot="right-col"><button>Some text</button></sg-sample>
+        <sg-text slot="left-col">
+          A longer example using a custom template and slots to place the content in different cells of a table. This time each components are explictely defined and assigned a `slot`.
+        </sg-text>
+        <sg-src lang="html" slot="left-col">
+          <button>Some text</button>
+        </sg-src>
+      </sg-item>
     </sg-group>
 
-    <sg-item template="right-col-sample">
-      <sg-text slot="header">### Some title for a heavy setup</sg-text>
-      <sg-sample slot="right-col"><button>Some text</button></sg-sample>
-      <sg-text slot="left-col">
-        A longer example using a custom template and slots to place the content in different cells of a table. This time each components are explictely defined and assigned a `slot`.
-      </sg-text>
-      <sg-src lang="html" slot="left-col">
-        <button>Some text</button>
-      </sg-src>
-    </sg-item>
   </body>
 </html>
