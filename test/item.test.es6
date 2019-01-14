@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {waitsFor} from 'widjet-test-utils/async';
 
 import '../src/item';
 
@@ -34,6 +35,67 @@ describe('ItemElement', () => {
         '<sg-src lang="html"><div class="dummy"></div></sg-src>',
       ].join(''));
     });
+  });
+
+  describe('when content is not available in the constructor', () => {
+    beforeEach(() => {
+      item = document.createElement('sg-item');
+
+      item.innerHTML = `
+            Some text
+            <div class="dummy"></div>`;
+    });
+
+    describe('when accessing one its derived properties', () => {
+      it('gathers data lazily', () => {
+        expect(asSource(item.samples))
+        .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+
+        expect(asSource(item.sources))
+        .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
+
+        expect(asSource(item.texts))
+        .to.eql([`<sg-text>
+            Some text
+            </sg-text>`]);
+
+        expect(item.innerHTML).to.eql([
+          `<sg-text>
+            Some text
+            </sg-text>`,
+          '<sg-sample><div class="dummy"></div></sg-sample>',
+          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+        ].join(''));
+      });
+    });
+
+    describe('placing it in the DOM', () => {
+      it('gathers data lazily', () => {
+        getTestRoot().appendChild(item);
+
+        return waitsFor(() => item._initialized).then(() => {
+          expect(asSource(item._samples))
+          .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+
+          expect(asSource(item._sources))
+          .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
+
+          expect(asSource(item._texts))
+          .to.eql([`<sg-text>
+            Some text
+            </sg-text>`]);
+
+          expect(item.innerHTML).to.eql([
+            `<sg-text>
+            Some text
+            </sg-text>`,
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+        });
+      });
+    });
+
   });
 
   describe('with mixed html content', () => {

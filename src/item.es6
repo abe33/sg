@@ -3,17 +3,46 @@
 import {asArray, getNode} from 'widjet-utils';
 import HasTemplate from './has-template';
 import HasPreview from './has-preview';
+import HasLazyContent from './has-lazy-content';
 import parseValue from './utils/parseValue';
 import mix from './utils/mix';
 
-export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview) {
-  constructor() {
-    super();
+export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasLazyContent) {
 
-    this.sources = [];
-    this.samples = [];
-    this.texts = [];
-    this.meta = {};
+  get sources() {
+    this.lazyInit();
+    return this._sources.slice();
+  }
+
+  get samples() {
+    this.lazyInit();
+    return this._samples.slice();
+  }
+
+  get texts() {
+    this.lazyInit();
+    return this._texts.slice();
+  }
+
+  get meta() {
+    this.lazyInit();
+    return this._meta;
+  }
+
+  connectedCallback() {
+    requestAnimationFrame(() => this.lazyInit());
+  }
+
+  getPreview() {
+    this.lazyInit();
+    return super.getPreview(this._samples[0]);
+  }
+
+  init() {
+    this._sources = [];
+    this._samples = [];
+    this._texts = [];
+    this._meta = {};
 
     const content = this.gatherData();
 
@@ -22,10 +51,6 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     });
 
     content.forEach(c => this.appendChild(c));
-  }
-
-  getPreview() {
-    return super.getPreview(this.samples[0]);
   }
 
   gatherData() {
@@ -40,7 +65,7 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
       if (currentSample.length) {
         const sample = currentSample.join('\n');
         const node = getNode(`<sg-sample>${sample}</sg-sample>`);
-        this.samples.push(node);
+        this._samples.push(node);
         content.push(node);
         currentSample = [];
       }
@@ -52,7 +77,7 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
           const nodeContent = c.textContent;
           if (nodeContent.trim() !== '') {
             const node = getNode(`<sg-text>${nodeContent}</sg-text>`);
-            this.texts.push(node);
+            this._texts.push(node);
             content.push(node);
           }
           break;
@@ -61,19 +86,19 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
           switch (c.nodeName.toLowerCase()) {
             case 'sg-text': {
               storeCurrentSample();
-              this.texts.push(c);
+              this._texts.push(c);
               content.push(c);
               break;
             }
             case 'sg-sample': {
               storeCurrentSample();
-              this.samples.push(c);
+              this._samples.push(c);
               content.push(c);
               break;
             }
             case 'sg-src': {
               storeCurrentSample();
-              this.sources.push(c);
+              this._sources.push(c);
               content.push(c);
               break;
             }
@@ -83,7 +108,7 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
               const content = c.getAttribute('content');
               const type = c.getAttribute('type') || 'string';
               if (name && content) {
-                this.meta[name] = parseValue(content, type);
+                this._meta[name] = parseValue(content, type);
               }
               break;
             }
@@ -100,10 +125,10 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     storeCurrentSample();
 
     // If we endup with samples but no sources, the source is the first sample.
-    if (this.sources.length === 0 && this.samples.length > 0) {
-      const sample = this.samples[0];
+    if (this._sources.length === 0 && this._samples.length > 0) {
+      const sample = this._samples[0];
       const node = getNode(`<sg-src lang="html">${sample.innerHTML}</sg-src>`);
-      this.sources.push(node);
+      this._sources.push(node);
       content.push(node);
     }
 
