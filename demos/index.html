@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 
-    <script type="text/javascript" src="../lib/index.js"></script>
+    <script type="text/javascript" src="../lib/index.js" defer></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/twig.min.js" type='text/javascript'></script>
@@ -85,6 +85,7 @@
       </sg-script>
     </template>
 
+    <sg-group>
     <sg-item>
       ### Some Button Example
 
@@ -98,6 +99,7 @@
 
       <button>Some text</button>
     </sg-item>
+    </sg-group>
 
     <sg-item template="right-col-sample">
       <sg-text slot="header">### Some title for a heavy setup</sg-text>
