@@ -5,12 +5,6 @@ export default function HasLazyContent (superclass) {
     constructor(...args) {
       super(...args);
 
-      requestAnimationFrame(() => {
-        if(this.childNodes.length) {
-          this.lazyInit();
-        }
-      });
-
       if(this.childNodes.length > 0) {
         this.lazyInit();
       }

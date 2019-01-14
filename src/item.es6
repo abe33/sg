@@ -30,7 +30,7 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
   }
 
   connectedCallback() {
-    requestAnimationFrame(() => this.lazyInit());
+    this.lazyInit();
   }
 
   getPreview() {
