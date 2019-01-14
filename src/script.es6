@@ -15,6 +15,12 @@ const findRoot = (node) => {
   return root;
 }
 
+const wrapSource = (source, id) => `
+  (function(){
+    const {currentScript, currentHost, currentRoot} = customElements.get('sg-script').getContext(${id});
+    ${source}
+  })();`
+
 export default class ScriptElement extends HTMLElement {
   static getContext(id) {
     const instance = instances[id];
@@ -31,16 +37,25 @@ export default class ScriptElement extends HTMLElement {
     const id = scriptId++;
     instances[id] = this;
 
-    const source = this.innerHTML;
-    const script = document.createElement('script');
-    script.setAttribute('type', 'text/javascript');
-    script.innerHTML = `
-    (function(){
-      const {currentScript, currentHost, currentRoot} = customElements.get('sg-script').getContext(${id});
-      ${source}
-    })();`;
-    this.innerHTML = '';
-    this.appendChild(script);
+    if (this.hasAttribute('src')) {
+      fetch(this.getAttribute('src'))
+      .then(response => response.text())
+      .then(source => {
+        const script = document.createElement('script');
+        this.dispatchEvent(new Event('load'));
+        script.setAttribute('type', 'text/javascript');
+        script.innerHTML = wrapSource(source, id);
+        this.appendChild(script);
+      })
+      .catch(err => console.log(err));
+    } else {
+      const source = this.innerHTML;
+      const script = document.createElement('script');
+      script.setAttribute('type', 'text/javascript');
+      script.innerHTML = wrapSource(source, id);
+      this.innerHTML = '';
+      this.appendChild(script);
+    }
   }
 }
 

@@ -139,21 +139,21 @@ And in the previous example, some custom templates are defined and affected to s
 
 ##### Using a Source template to plug a code highlighter
 
-This library uses a little hack for scripts defined inside a template.
-All scripts will be prepended with definitions for two constants that will expose to the script the shadow root and the host node. This allows template scripts to be aware of the context and make extra operations on that context.
+This library uses a little hack for scripts defined inside a template. By using a `sg-script` tag instead of the usual `script` tag, the script sources will be prepended with definitions for `currentScript`, `currentRoot` and `currentHost` constants store respectively the `sg-script` object, its shadow root ancestor and the host object of that shadow root. This allows template scripts to be aware of the context and make extra operations on that context.
+This trick works for both inline and external scripts.
 
 One interesting example is to use a template script to implement the support for an external code highlighter to render the content of a `sg-src` node:
 
 ```html
 <template id="sg-src">
   <pre><code></code></pre>
-  <script type="text/javascript">
+  <sg-script>
     const lang = currentHost.getAttribute('lang') || 'html';
     const code = currentRoot.querySelector('code');
     const source = currentHost.innerHTML;
 
     code.innerHTML = hljs.highlight(lang, source).value;
-  </script>
+  </sg-script>
 </template>
 
 sg-item>
