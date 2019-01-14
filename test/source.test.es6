@@ -5,16 +5,6 @@ import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/source';
 
-const getSrcScript = () => {
-  // We need to create the script here because scripts passed
-  // through innerHTML are not executed.
-  const script = document.createElement('script');
-  script.textContent = `
-  const code = currentRoot.querySelector('code');
-  code.textContent = currentHost.innerHTML.trim();`;
-  return script;
-};
-
 describe('SourceElement', () => {
   let src;
 
@@ -44,19 +34,15 @@ describe('SourceElement', () => {
         setPageContent(`
           <template id="sg-src">
             <code></code>
+            <sg-script>
+              const code = currentRoot.querySelector('code');
+              code.textContent = currentHost.innerHTML.trim();
+            </sg-script>
           </template>
 
-          <div class="test"></div>`);
-
-        const script = getSrcScript();
-
-        getTestRoot().querySelector('#sg-src').content.appendChild(script);
-
-        const testContainer = getTestRoot().querySelector('.test');
-        testContainer.innerHTML = `
-        <sg-src>
-          <div>text</div>
-        </sg-src>`;
+          <sg-src>
+            <div>text</div>
+          </sg-src>`);
 
         src = getTestRoot().querySelector('sg-src');
       });
@@ -76,19 +62,15 @@ describe('SourceElement', () => {
         setPageContent(`
           <template id="other-src">
             <code></code>
+            <sg-script>
+              const code = currentRoot.querySelector('code');
+              code.textContent = currentHost.innerHTML.trim();
+            </sg-script>
           </template>
 
-          <div class="test"></div>`);
-
-        const script = getSrcScript();
-
-        getTestRoot().querySelector('#other-src').content.appendChild(script);
-
-        const testContainer = getTestRoot().querySelector('.test');
-        testContainer.innerHTML = `
-        <sg-src template="other-src">
-          <div>text</div>
-        </sg-src>`;
+          <sg-src template="other-src">
+            <div>text</div>
+          </sg-src>`);
 
         src = getTestRoot().querySelector('sg-src');
       });

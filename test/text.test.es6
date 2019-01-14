@@ -30,24 +30,16 @@ describe('TextElement', () => {
           setPageContent(`
             <template id="sg-text">
               <p></p>
+
+              <sg-script>
+                const p = currentRoot.querySelector('p');
+                p.innerHTML = currentHost.innerHTML.trim();
+              </sg-script>
             </template>
 
-            <div class="test"></div>`);
-
-          // We need to create the script here because scripts passed
-          // through innerHTML are not executed.
-          const script = document.createElement('script');
-          script.textContent = `
-          const p = currentRoot.querySelector('p');
-          p.innerHTML = currentHost.innerHTML.trim();`;
-
-          getTestRoot().querySelector('#sg-text').content.appendChild(script);
-
-          const testContainer = getTestRoot().querySelector('.test');
-          testContainer.innerHTML = `
-          <sg-text>
-            <em>Some text</em>
-          </sg-text>`;
+            <sg-text>
+              <em>Some text</em>
+            </sg-text>`);
 
           text = getTestRoot().querySelector('sg-text');
         });
