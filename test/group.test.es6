@@ -19,8 +19,9 @@ describe('GroupElement', () => {
     beforeEach(() => {
       setPageContent(`
         <sg-group ${attr}="value">
-          <div></div>
-          <div></div>
+          <sg-item></sg-item>
+          <sg-item></sg-item>
+          <sg-item></sg-item>
           <div></div>
         </sg-group>
       `);
@@ -29,7 +30,8 @@ describe('GroupElement', () => {
     });
     describe(`${attr} attribute`, () => {
       it('is passed to all its children', () => {
-        expect(asArray(group.querySelectorAll('div')).every(n => n.getAttribute(attr) === 'value')).to.be.ok()
+        expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok()
+        expect(group.querySelector('div').getAttribute(attr)).to.be(null);
       });
     })
   });

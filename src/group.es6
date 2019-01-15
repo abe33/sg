@@ -1,13 +1,13 @@
 'use strict';
 
 import {asArray} from 'widjet-utils';
-import {copyAttribute} from './utils/attributes';
+import {copyAttribute, forName} from './utils/attributes';
 
 const ATTRIBUTES_MAP = {
-  'template': copyAttribute('template'),
-  'samples-slot': copyAttribute('samples-slot'),
-  'texts-slot': copyAttribute('texts-slot'),
-  'sources-slot': copyAttribute('sources-slot'),
+  'template': forName('sg-item', copyAttribute('template')),
+  'samples-slot': forName('sg-item', copyAttribute('samples-slot')),
+  'texts-slot': forName('sg-item', copyAttribute('texts-slot')),
+  'sources-slot': forName('sg-item', copyAttribute('sources-slot')),
 }
 
 export default class GroupElement extends HTMLElement {
