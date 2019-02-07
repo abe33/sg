@@ -24,8 +24,10 @@
       sg-preview {
         display: inline-block;
         vertical-align: middle;
-        float: left;
-        margin-right: 8px;
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translate(0, -50%);
       }
       sg-preview svg {
         max-height: 32px;
@@ -40,6 +42,13 @@
   <body>
 
     <template id="right-col-sample">
+      <style>
+        td[colspan] {
+          height: 32px;
+          position: relative;
+          padding-left: 42px;
+        }
+      </style>
       <table border="1">
         <tr><td colspan="2"><slot name="header"></slot></td></tr>
         <tr>
