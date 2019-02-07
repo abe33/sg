@@ -13,13 +13,13 @@ const findRoot = (node) => {
     }
   });
   return root;
-}
+};
 
 const wrapSource = (source, id) => `
   (function(){
     const {currentScript, currentHost, currentRoot} = customElements.get('sg-script').getContext(${id});
     ${source}
-  })();`
+  })();`;
 
 export default class ScriptElement extends HTMLElement {
   static getContext(id) {

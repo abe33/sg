@@ -8,7 +8,7 @@ const ATTRIBUTES_MAP = {
   'samples-slot': forName('sg-item', copyAttribute('samples-slot')),
   'texts-slot': forName('sg-item', copyAttribute('texts-slot')),
   'sources-slot': forName('sg-item', copyAttribute('sources-slot')),
-}
+};
 
 export default class GroupElement extends HTMLElement {
   constructor() {
@@ -17,11 +17,11 @@ export default class GroupElement extends HTMLElement {
     const nodes = asArray(this.children);
 
     for (const attr in ATTRIBUTES_MAP) {
-      if(this.hasAttribute(attr)) {
+      if (this.hasAttribute(attr)) {
         ATTRIBUTES_MAP[attr](nodes, this);
       }
     }
   }
 }
 
-customElements.define('sg-group', GroupElement)
+customElements.define('sg-group', GroupElement);

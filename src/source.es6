@@ -1,8 +1,6 @@
 'use strict';
 
-import {asArray} from 'widjet-utils';
 import HasTemplate from './has-template';
-import getContentAsFragment from './utils/getContentAsFragment';
 import mix from './utils/mix';
 
 export default class SourceElement extends mix(HTMLElement).with(HasTemplate) {
@@ -20,7 +18,7 @@ export default class SourceElement extends mix(HTMLElement).with(HasTemplate) {
 
     const source = this.innerHTML;
 
-    shadowRoot.innerHTML = `<pre><code></code></pre>`;
+    shadowRoot.innerHTML = '<pre><code></code></pre>';
     shadowRoot.querySelector('code').textContent = source.trim();
   }
 }

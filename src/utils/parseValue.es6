@@ -1,7 +1,7 @@
 'use strict';
 
 export default function parseValue(value, type) {
-  switch(type) {
+  switch (type) {
     case 'boolean':
       return value === 'true';
     case 'number':

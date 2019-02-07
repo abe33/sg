@@ -1,14 +1,14 @@
 'use strict';
 
-import {asArray, merge} from 'widjet-utils';
+import {merge} from 'widjet-utils';
 
 const DEFAULT_OPTIONS = {
   mandatorySlot: true,
-}
+};
 
-export default function HasTemplate (superclass) {
+export default function HasTemplate(superclass) {
   return class extends superclass {
-    consumeTemplate(options={}) {
+    consumeTemplate(options = {}) {
       options = merge(DEFAULT_OPTIONS, options);
 
       const tplId = this.hasAttribute('template')
@@ -39,6 +39,5 @@ export default function HasTemplate (superclass) {
     }
 
     renderDefaultTemplate() {}
-  }
+  };
 }
-

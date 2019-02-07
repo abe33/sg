@@ -10,6 +10,6 @@ class MixinBuilder {
   }
 }
 
-export default function mix (superclass) {
+export default function mix(superclass) {
   return new MixinBuilder(superclass);
 }
