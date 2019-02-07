@@ -12,7 +12,7 @@ const ATTRIBUTES_MAP = {
   'samples-slot': forName('sg-sample', copyAttribute('samples-slot', 'slot')),
   'texts-slot': forName('sg-text', copyAttribute('texts-slot', 'slot')),
   'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
-}
+};
 
 export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasLazyContent) {
 
@@ -54,11 +54,11 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     const content = this.gatherData();
 
     this.consumeTemplate({
-      defaultTemplateId: 'sg-item'
+      defaultTemplateId: 'sg-item',
     });
 
     for (const attr in ATTRIBUTES_MAP) {
-      if(this.hasAttribute(attr)) {
+      if (this.hasAttribute(attr)) {
         ATTRIBUTES_MAP[attr](content, this);
       }
     }
