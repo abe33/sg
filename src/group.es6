@@ -11,6 +11,7 @@ const ATTRIBUTES_MAP = {
   'samples-slot': onList(forName('sg-item', copyAttribute('samples-slot'))),
   'texts-slot': onList(forName('sg-item', copyAttribute('texts-slot'))),
   'sources-slot': onList(forName('sg-item', copyAttribute('sources-slot'))),
+  'previews-slot': onList(forName('sg-item', copyAttribute('previews-slot'))),
 };
 
 export default class GroupElement extends mix(HTMLElement)

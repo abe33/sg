@@ -50,7 +50,12 @@
         }
       </style>
       <table border="1">
-        <tr><td colspan="2"><slot name="header"></slot></td></tr>
+        <tr>
+          <td colspan="2">
+            <slot name="preview"></slot>
+            <slot name="header"></slot>
+          </td>
+        </tr>
         <tr>
           <td><slot name="left-col"></slot></td>
           <td><slot name="right-col"></slot></td>
@@ -58,9 +63,7 @@
       </table>
 
         <sg-script>
-          const preview = currentHost.getPreview();
-          preview.setAttribute('slot','header');
-          currentHost.appendChild(preview);
+          currentHost.appendChild(currentHost.getPreview());
         </sg-script>
     </template>
 
@@ -109,7 +112,7 @@
       <button>Some text</button>
     </sg-item>
 
-    <sg-group template="right-col-sample" samples-slot="right-col" texts-slot="left-col" sources-slot="left-col">
+    <sg-group template="right-col-sample" samples-slot="right-col" texts-slot="left-col" sources-slot="left-col" previews-slot="preview">
       <sg-item>
         ### Some Button Example
 

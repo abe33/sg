@@ -13,6 +13,7 @@ describe('GroupElement', () => {
     'template',
     'samples-slot',
     'sources-slot',
+    'previews-slot',
     'texts-slot',
   ].forEach(attr => {
 
