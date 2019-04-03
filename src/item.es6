@@ -6,7 +6,7 @@ import getContentAsFragment from './utils/getContentAsFragment';
 import getStringAsFragment from './utils/getStringAsFragment';
 import HasTemplate from './mixins/has-template';
 import HasPreview from './mixins/has-preview';
-import parseValue from './utils/parseValue';
+import HasMeta from './mixins/has-meta';
 import mix from './utils/mix';
 
 const ATTRIBUTES_MAP = {
@@ -15,7 +15,7 @@ const ATTRIBUTES_MAP = {
   'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
 };
 
-export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview) {
+export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasMeta) {
 
   get sources() {
     return asArray(this.querySelectorAll('sg-src'));
@@ -27,18 +27,6 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
 
   get texts() {
     return asArray(this.querySelectorAll('sg-text'));
-  }
-
-  get meta() {
-    return asArray(this.querySelectorAll('sg-meta')).reduce((o, n) => {
-      const name = n.getAttribute('name');
-      const content = n.getAttribute('content');
-      const type = n.getAttribute('type') || 'string';
-      if (name && content) {
-        o[name] = parseValue(content, type);
-      }
-      return o;
-    }, {});
   }
 
   set innerHTML(html) {

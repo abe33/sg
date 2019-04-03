@@ -36,4 +36,31 @@ describe('GroupElement', () => {
       });
     });
   });
+
+  describe('meta children', () => {
+    beforeEach(() => {
+      setPageContent(`
+        <sg-group>
+          <sg-meta name="string" content="foo"></sg-meta>
+          <sg-meta name="bool" content="true" type="boolean"></sg-meta>
+          <sg-meta name="number" content="15.5" type="number"></sg-meta>
+
+          <sg-item>
+            <sg-meta name="bar" content="bars"></sg-meta>
+          </sg-item>
+          <div></div>
+        </sg-group>
+      `);
+
+      group = getTestRoot().querySelector('sg-group');
+    });
+
+    it('are used to set the group meta', () => {
+      expect(group.meta).to.eql({
+        string: 'foo',
+        bool: true,
+        number: 15.5,
+      });
+    });
+  });
 });
