@@ -7,6 +7,7 @@ import getStringAsFragment from './utils/getStringAsFragment';
 import HasTemplate from './mixins/has-template';
 import HasPreview from './mixins/has-preview';
 import HasMeta from './mixins/has-meta';
+import ForwardAttributes from './mixins/forward-attributes';
 import mix from './utils/mix';
 
 const ATTRIBUTES_MAP = {
@@ -15,7 +16,8 @@ const ATTRIBUTES_MAP = {
   'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
 };
 
-export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasMeta) {
+export default class ItemElement extends mix(HTMLElement)
+  .with(HasTemplate, HasPreview, HasMeta, ForwardAttributes(ATTRIBUTES_MAP)) {
 
   get sources() {
     return asArray(this.querySelectorAll('sg-src'));
@@ -53,16 +55,16 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
 
   appendChild(node) {
     if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta'].includes(node.nodeName.toLowerCase())) {
-      this.setSlotAttributes(node);
+      this.forwardAttributes(node);
       super.appendChild(node);
     } else {
       if (node.nodeType === 1) {
         const sample = getNode(`<sg-sample>${node.outerHTML}</sg-sample>`);
-        this.setSlotAttributes(sample);
+        this.forwardAttributes(sample);
         super.appendChild(sample);
       } else {
         const text = getNode(`<sg-text>${node.textContent}</sg-text>`);
-        this.setSlotAttributes(text);
+        this.forwardAttributes(text);
         super.appendChild(text);
       }
     }
@@ -72,14 +74,6 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     if (originalContent.childNodes.length > 0) {
       const data = this.gatherData(originalContent.childNodes);
       data.forEach(c => this.appendChild(c));
-    }
-  }
-
-  setSlotAttributes(node) {
-    for (const attr in ATTRIBUTES_MAP) {
-      if (this.hasAttribute(attr)) {
-        ATTRIBUTES_MAP[attr](node, this);
-      }
     }
   }
 

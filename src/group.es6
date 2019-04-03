@@ -3,6 +3,7 @@
 import {asArray} from 'widjet-utils';
 import {copyAttribute, forName, onList} from './utils/attributes';
 import HasMeta from './mixins/has-meta';
+import ForwardAttributes from './mixins/forward-attributes';
 import mix from './utils/mix';
 
 const ATTRIBUTES_MAP = {
@@ -12,17 +13,13 @@ const ATTRIBUTES_MAP = {
   'sources-slot': onList(forName('sg-item', copyAttribute('sources-slot'))),
 };
 
-export default class GroupElement extends mix(HTMLElement).with(HasMeta) {
+export default class GroupElement extends mix(HTMLElement)
+  .with(HasMeta, ForwardAttributes(ATTRIBUTES_MAP)) {
+
   constructor() {
     super();
 
-    const nodes = asArray(this.children);
-
-    for (const attr in ATTRIBUTES_MAP) {
-      if (this.hasAttribute(attr)) {
-        ATTRIBUTES_MAP[attr](nodes, this);
-      }
-    }
+    this.forwardAttributes(asArray(this.children));
   }
 }
 
