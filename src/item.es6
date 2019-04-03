@@ -2,7 +2,8 @@
 
 import {asArray, getNode} from 'widjet-utils';
 import {forName, copyAttribute} from './utils/attributes';
-import HasLazyContent from './has-lazy-content';
+import getContentAsFragment from './utils/getContentAsFragment';
+import getStringAsFragment from './utils/getStringAsFragment';
 import HasTemplate from './mixins/has-template';
 import HasPreview from './mixins/has-preview';
 import parseValue from './utils/parseValue';
@@ -14,84 +15,100 @@ const ATTRIBUTES_MAP = {
   'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
 };
 
-export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview, HasLazyContent) {
+export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview) {
 
   get sources() {
-    this.lazyInit();
     return this._sources.slice();
   }
 
   get samples() {
-    this.lazyInit();
     return this._samples.slice();
   }
 
   get texts() {
-    this.lazyInit();
     return this._texts.slice();
   }
 
   get meta() {
-    this.lazyInit();
     return this._meta;
   }
 
-  connectedCallback() {
-    this.lazyInit();
-  }
-
-  getPreview() {
-    this.lazyInit();
-    return super.getPreview(this._samples[0]);
-  }
-
-  init() {
-    this._sources = [];
-    this._samples = [];
-    this._texts = [];
-    this._meta = {};
-
-    const content = this.gatherData();
+  constructor() {
+    super();
 
     this.consumeTemplate({
       defaultTemplateId: 'sg-item',
     });
 
-    for (const attr in ATTRIBUTES_MAP) {
-      if (this.hasAttribute(attr)) {
-        ATTRIBUTES_MAP[attr](content, this);
-      }
-    }
-
-    content.forEach(c => this.appendChild(c));
+    this.parseContent(getContentAsFragment(this));
   }
 
-  gatherData() {
-    // We're gathering each content node here and we'll append
-    // everything at the end.
-    const content = [];
+  set innerHTML(html) {
+    this.parseContent(getStringAsFragment(html));
+  }
+
+  get innerHTML() {
+    return super.innerHTML;
+  }
+
+  getPreview() {
+    return super.getPreview(this._samples[0]);
+  }
+
+  parseContent(originalContent) {
+    if (originalContent.childNodes.length > 0) {
+      const data = this.gatherData(originalContent.childNodes);
+
+      this._sources = data.sources;
+      this._samples = data.samples;
+      this._texts = data.texts;
+      this._meta = data.meta;
+
+      for (const attr in ATTRIBUTES_MAP) {
+        if (this.hasAttribute(attr)) {
+          ATTRIBUTES_MAP[attr](data.newContent, this);
+        }
+      }
+
+      data.newContent.forEach(c => this.appendChild(c));
+    }
+  }
+
+  gatherData(nodes) {
+    // We're gathering data in this structure.
+    const out = {
+      initialContent: asArray(nodes),
+      newContent: [],
+      sources: [],
+      samples: [],
+      texts: [],
+      meta: {},
+    };
+
     // Every node that is not a text node and not a sg-* element
-    // will be part of a sample. We'll
+    // will be part of a sample. We collect them here for later use.
     let currentSample = [];
-    // Once we reach the end of the sample
+
+    // Once we reach the end of the sample, we collect what has been stored
+    // here and build a sg-sample object with that.
     const storeCurrentSample = () => {
       if (currentSample.length) {
         const sample = currentSample.join('\n');
         const node = getNode(`<sg-sample>${sample}</sg-sample>`);
-        this._samples.push(node);
-        content.push(node);
+        out.samples.push(node);
+        out.newContent.push(node);
         currentSample = [];
       }
     };
 
-    asArray(this.childNodes).forEach(c => {
+    asArray(nodes).forEach(c => {
       switch (c.nodeType) {
         case 3: {
           const nodeContent = c.textContent;
           if (nodeContent.trim() !== '') {
             const node = getNode(`<sg-text>${nodeContent}</sg-text>`);
-            this._texts.push(node);
-            content.push(node);
+            out.texts.push(node);
+            out.newContent.push(node);
           }
           break;
         }
@@ -99,20 +116,20 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
           switch (c.nodeName.toLowerCase()) {
             case 'sg-text': {
               storeCurrentSample();
-              this._texts.push(c);
-              content.push(c);
+              out.texts.push(c);
+              out.newContent.push(c);
               break;
             }
             case 'sg-sample': {
               storeCurrentSample();
-              this._samples.push(c);
-              content.push(c);
+              out.samples.push(c);
+              out.newContent.push(c);
               break;
             }
             case 'sg-src': {
               storeCurrentSample();
-              this._sources.push(c);
-              content.push(c);
+              out.sources.push(c);
+              out.newContent.push(c);
               break;
             }
             case 'sg-meta': {
@@ -121,7 +138,7 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
               const content = c.getAttribute('content');
               const type = c.getAttribute('type') || 'string';
               if (name && content) {
-                this._meta[name] = parseValue(content, type);
+                out.meta[name] = parseValue(content, type);
               }
               break;
             }
@@ -132,20 +149,20 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
           }
         }
       }
-      c.remove();
+      // c.remove();
     });
 
     storeCurrentSample();
 
     // If we endup with samples but no sources, the source is the first sample.
-    if (this._sources.length === 0 && this._samples.length > 0) {
-      const sample = this._samples[0];
+    if (out.sources.length === 0 && out.samples.length > 0) {
+      const sample = out.samples[0];
       const node = getNode(`<sg-src lang="html">${sample.innerHTML}</sg-src>`);
-      this._sources.push(node);
-      content.push(node);
+      out.sources.push(node);
+      out.newContent.push(node);
     }
 
-    return content;
+    return out;
   }
 }
 
