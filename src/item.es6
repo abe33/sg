@@ -2,9 +2,9 @@
 
 import {asArray, getNode} from 'widjet-utils';
 import {forName, copyAttribute} from './utils/attributes';
-import HasTemplate from './has-template';
-import HasPreview from './has-preview';
 import HasLazyContent from './has-lazy-content';
+import HasTemplate from './mixins/has-template';
+import HasPreview from './mixins/has-preview';
 import parseValue from './utils/parseValue';
 import mix from './utils/mix';
 

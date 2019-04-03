@@ -1,7 +1,7 @@
 'use strict';
 
 import {asArray} from 'widjet-utils';
-import HasTemplate from './has-template';
+import HasTemplate from './mixins/has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
 import mix from './utils/mix';
 

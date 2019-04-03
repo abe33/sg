@@ -1,6 +1,6 @@
 'use strict';
 
-import PreviewElement from './preview';
+import PreviewElement from '../preview';
 
 export default function HasPreview(superclass) {
   return class extends superclass {
