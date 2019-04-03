@@ -604,4 +604,24 @@ describe('ItemElement', () => {
       expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
     });
   });
+  describe('previews-slot attribute', () => {
+    it('sets the slot attribute on generated previews', () => {
+      setPageContent(`
+        <sg-item previews-slot="name">
+          <sg-preview>foo</sg-preview>
+        </sg-item>
+      `);
+
+      item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-preview').getAttribute('slot')).to.eql('name');
+    });
+
+    it('sets the slot attribute on appended previews', () => {
+      setPageContent('<sg-item previews-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.appendChild(getNode('<sg-preview>foo</sg-preview>'));
+      expect(item.querySelector('sg-preview').getAttribute('slot')).to.eql('name');
+    });
+  });
 });

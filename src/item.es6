@@ -14,6 +14,7 @@ const ATTRIBUTES_MAP = {
   'samples-slot': forName('sg-sample', copyAttribute('samples-slot', 'slot')),
   'texts-slot': forName('sg-text', copyAttribute('texts-slot', 'slot')),
   'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
+  'previews-slot': forName('sg-preview', copyAttribute('previews-slot', 'slot')),
 };
 
 export default class ItemElement extends mix(HTMLElement)
@@ -54,7 +55,7 @@ export default class ItemElement extends mix(HTMLElement)
   }
 
   appendChild(node) {
-    if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta'].includes(node.nodeName.toLowerCase())) {
+    if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta', 'sg-preview'].includes(node.nodeName.toLowerCase())) {
       this.forwardAttributes(node);
       super.appendChild(node);
     } else {
@@ -122,6 +123,7 @@ export default class ItemElement extends mix(HTMLElement)
               break;
             }
             case 'sg-text':
+            case 'sg-preview':
             case 'sg-meta': {
               storeCurrentSample();
               out.push(c);
