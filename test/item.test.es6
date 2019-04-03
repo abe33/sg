@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {getNode} from 'widjet-utils';
 
 import '../src/item';
 
@@ -45,8 +46,8 @@ describe('ItemElement', () => {
             <div class="dummy"></div>`;
     });
 
-    describe('when accessing one its derived properties', () => {
-      it('gathers data lazily', () => {
+    describe('setting its innerHTML', () => {
+      it('makes the item gather its data', () => {
         expect(asSource(item.samples))
         .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
 
@@ -65,6 +66,121 @@ describe('ItemElement', () => {
           '<sg-sample><div class="dummy"></div></sg-sample>',
           '<sg-src lang="html"><div class="dummy"></div></sg-src>',
         ].join(''));
+      });
+    });
+  });
+
+  describe('when data has already gathered', () => {
+    beforeEach(() => {
+      setPageContent(`
+        <sg-item>
+          <div class="dummy"></div>
+        </sg-item>
+      `);
+
+      item = getTestRoot().querySelector('sg-item');
+    });
+
+    describe('adding a new element', () => {
+      beforeEach(() => {
+        expect(item.innerHTML).to.eql([
+          '<sg-sample><div class="dummy"></div></sg-sample>',
+          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+        ].join(''));
+      });
+
+      describe('that is an unknown element node', () => {
+        it('adds a sg-sample node as part of the sample collection', () => {
+          item.appendChild(getNode('<div>foo</div>'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-sample><div>foo</div></sg-sample>',
+          ].join(''));
+
+          expect(asSource(item.samples)).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-sample><div>foo</div></sg-sample>',
+          ]);
+        });
+
+        it('adds a sg-text node as part of the text collection', () => {
+          item.appendChild(document.createTextNode('foo'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-text>foo</sg-text>',
+          ].join(''));
+
+          expect(asSource(item.texts)).to.eql([
+            '<sg-text>foo</sg-text>',
+          ]);
+        });
+      });
+
+      describe('that is a text node', () => {
+
+      });
+
+      describe('that is a known sg-* element', () => {
+        it('adds sg-sample as part of the sample collection', () => {
+          item.appendChild(getNode('<sg-sample>foo</sg-sample>'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-sample>foo</sg-sample>',
+          ].join(''));
+
+          expect(asSource(item.samples)).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-sample>foo</sg-sample>',
+          ]);
+        });
+
+        it('adds sg-src as part of the sources collection', () => {
+          item.appendChild(getNode('<sg-src>foo</sg-src>'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-src>foo</sg-src>',
+          ].join(''));
+
+          expect(asSource(item.sources)).to.eql([
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-src>foo</sg-src>',
+          ]);
+        });
+
+        it('adds sg-text as part of the texts collection', () => {
+          item.appendChild(getNode('<sg-text>foo</sg-text>'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-text>foo</sg-text>',
+          ].join(''));
+
+
+          expect(asSource(item.texts)).to.eql([
+            '<sg-text>foo</sg-text>',
+          ]);
+        });
+
+        it('adds sg-meta as part of the meta object', () => {
+          item.appendChild(getNode('<sg-meta name="foo" content="bar"></sg-meta>'));
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+            '<sg-meta name="foo" content="bar"></sg-meta>',
+          ].join(''));
+
+          expect(item.meta).to.eql({foo: 'bar'});
+        });
       });
     });
   });
@@ -438,6 +554,14 @@ describe('ItemElement', () => {
       item = getTestRoot().querySelector('sg-item');
       expect(item.querySelector('sg-sample').getAttribute('slot')).to.eql('name');
     });
+
+    it('sets the slot attribute on appended samples', () => {
+      setPageContent('<sg-item samples-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.appendChild(getNode('<sg-sample><div class="dummy"></div></sg-sample>'));
+      expect(item.querySelector('sg-sample').getAttribute('slot')).to.eql('name');
+    });
   });
   describe('sources-slot attribute', () => {
     it('sets the slot attribute on generated sources', () => {
@@ -448,6 +572,14 @@ describe('ItemElement', () => {
       `);
 
       item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-src').getAttribute('slot')).to.eql('name');
+    });
+
+    it('sets the slot attribute on appended sources', () => {
+      setPageContent('<sg-item sources-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.appendChild(getNode('<sg-src><div class="dummy"></div></sg-src>'));
       expect(item.querySelector('sg-src').getAttribute('slot')).to.eql('name');
     });
   });
@@ -461,6 +593,14 @@ describe('ItemElement', () => {
       `);
 
       item = getTestRoot().querySelector('sg-item');
+      expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
+    });
+
+    it('sets the slot attribute on appended texts', () => {
+      setPageContent('<sg-item texts-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.appendChild(getNode('<sg-text>foo</sg-text>'));
       expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
     });
   });

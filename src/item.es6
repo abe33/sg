@@ -18,19 +18,35 @@ const ATTRIBUTES_MAP = {
 export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasPreview) {
 
   get sources() {
-    return this._sources.slice();
+    return asArray(this.querySelectorAll('sg-src'));
   }
 
   get samples() {
-    return this._samples.slice();
+    return asArray(this.querySelectorAll('sg-sample'));
   }
 
   get texts() {
-    return this._texts.slice();
+    return asArray(this.querySelectorAll('sg-text'));
   }
 
   get meta() {
-    return this._meta;
+    return asArray(this.querySelectorAll('sg-meta')).reduce((o, n) => {
+      const name = n.getAttribute('name');
+      const content = n.getAttribute('content');
+      const type = n.getAttribute('type') || 'string';
+      if (name && content) {
+        o[name] = parseValue(content, type);
+      }
+      return o;
+    }, {});
+  }
+
+  set innerHTML(html) {
+    this.parseContent(getStringAsFragment(html));
+  }
+
+  get innerHTML() {
+    return super.innerHTML;
   }
 
   constructor() {
@@ -43,48 +59,46 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     this.parseContent(getContentAsFragment(this));
   }
 
-  set innerHTML(html) {
-    this.parseContent(getStringAsFragment(html));
-  }
-
-  get innerHTML() {
-    return super.innerHTML;
-  }
-
   getPreview() {
-    return super.getPreview(this._samples[0]);
+    return super.getPreview(this.samples[0]);
+  }
+
+  appendChild(node) {
+    if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta'].includes(node.nodeName.toLowerCase())) {
+      this.setSlotAttributes(node);
+      super.appendChild(node);
+    } else {
+      if (node.nodeType === 1) {
+        const sample = getNode(`<sg-sample>${node.outerHTML}</sg-sample>`);
+        this.setSlotAttributes(sample);
+        super.appendChild(sample);
+      } else {
+        const text = getNode(`<sg-text>${node.textContent}</sg-text>`);
+        this.setSlotAttributes(text);
+        super.appendChild(text);
+      }
+    }
   }
 
   parseContent(originalContent) {
     if (originalContent.childNodes.length > 0) {
       const data = this.gatherData(originalContent.childNodes);
+      data.forEach(c => this.appendChild(c));
+    }
+  }
 
-      this._sources = data.sources;
-      this._samples = data.samples;
-      this._texts = data.texts;
-      this._meta = data.meta;
-
-      for (const attr in ATTRIBUTES_MAP) {
-        if (this.hasAttribute(attr)) {
-          ATTRIBUTES_MAP[attr](data.newContent, this);
-        }
+  setSlotAttributes(node) {
+    for (const attr in ATTRIBUTES_MAP) {
+      if (this.hasAttribute(attr)) {
+        ATTRIBUTES_MAP[attr](node, this);
       }
-
-      data.newContent.forEach(c => this.appendChild(c));
     }
   }
 
   gatherData(nodes) {
-    // We're gathering data in this structure.
-    const out = {
-      initialContent: asArray(nodes),
-      newContent: [],
-      sources: [],
-      samples: [],
-      texts: [],
-      meta: {},
-    };
-
+    const out = [];
+    const samples = [];
+    const sources = [];
     // Every node that is not a text node and not a sg-* element
     // will be part of a sample. We collect them here for later use.
     let currentSample = [];
@@ -95,8 +109,8 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
       if (currentSample.length) {
         const sample = currentSample.join('\n');
         const node = getNode(`<sg-sample>${sample}</sg-sample>`);
-        out.samples.push(node);
-        out.newContent.push(node);
+        samples.push(node);
+        out.push(node);
         currentSample = [];
       }
     };
@@ -107,39 +121,28 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
           const nodeContent = c.textContent;
           if (nodeContent.trim() !== '') {
             const node = getNode(`<sg-text>${nodeContent}</sg-text>`);
-            out.texts.push(node);
-            out.newContent.push(node);
+            out.push(node);
           }
           break;
         }
         case 1: {
           switch (c.nodeName.toLowerCase()) {
-            case 'sg-text': {
-              storeCurrentSample();
-              out.texts.push(c);
-              out.newContent.push(c);
-              break;
-            }
             case 'sg-sample': {
               storeCurrentSample();
-              out.samples.push(c);
-              out.newContent.push(c);
+              samples.push(c);
+              out.push(c);
               break;
             }
             case 'sg-src': {
               storeCurrentSample();
-              out.sources.push(c);
-              out.newContent.push(c);
+              sources.push(c);
+              out.push(c);
               break;
             }
+            case 'sg-text':
             case 'sg-meta': {
               storeCurrentSample();
-              const name = c.getAttribute('name');
-              const content = c.getAttribute('content');
-              const type = c.getAttribute('type') || 'string';
-              if (name && content) {
-                out.meta[name] = parseValue(content, type);
-              }
+              out.push(c);
               break;
             }
             default: {
@@ -155,11 +158,10 @@ export default class ItemElement extends mix(HTMLElement).with(HasTemplate, HasP
     storeCurrentSample();
 
     // If we endup with samples but no sources, the source is the first sample.
-    if (out.sources.length === 0 && out.samples.length > 0) {
-      const sample = out.samples[0];
+    if (sources.length === 0 && samples.length > 0) {
+      const sample = samples[0];
       const node = getNode(`<sg-src lang="html">${sample.innerHTML}</sg-src>`);
-      out.sources.push(node);
-      out.newContent.push(node);
+      out.push(node);
     }
 
     return out;
