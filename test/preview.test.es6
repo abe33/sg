@@ -10,7 +10,7 @@ describe('PreviewElement', () => {
       </sg-preview>`);
 
     const preview = getTestRoot().querySelector('sg-preview');
-    expect(preview.querySelector('svg foreignObject div')).not.to.be(null)
+    expect(preview.querySelector('svg foreignObject div')).not.to.be(null);
   });
 
   it('measures its content and use that as viewbox of the svg element', () => {

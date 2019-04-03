@@ -178,7 +178,7 @@ describe('ItemElement', () => {
             Some text content
 
             </sg-text>`,
-          `<sg-sample><div class="dummy"></div></sg-sample>`,
+          '<sg-sample><div class="dummy"></div></sg-sample>',
           `<sg-src>
               <div></div>
             </sg-src>`,

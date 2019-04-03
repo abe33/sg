@@ -14,7 +14,7 @@ describe('ScriptElement', () => {
   });
   afterEach(() => {
     delete window.testCallback;
-  })
+  });
 
   describe('when its content is defined in the page', () => {
     beforeEach(() => {
@@ -25,13 +25,13 @@ describe('ScriptElement', () => {
     });
 
     it('executes the script as soon as possible', () => {
-      expect(testCallback.called).to.be.ok();
+      expect(window.testCallback.called).to.be.ok();
     });
   });
 
   describe('when it has a src attribute', () => {
     beforeEach(() => {
-      setPageContent(`<sg-script src="/test/fixtures/script.es6"></sg-script>`);
+      setPageContent('<sg-script src="/test/fixtures/script.es6"></sg-script>');
 
       const script = getTestRoot().querySelector('sg-script');
       const loadSpy = sinon.spy();
@@ -41,7 +41,7 @@ describe('ScriptElement', () => {
     });
 
     it('executes the script as soon as possible', () => {
-      expect(testCallback.called).to.be.ok();
+      expect(window.testCallback.called).to.be.ok();
     });
   });
 });

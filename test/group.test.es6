@@ -30,9 +30,9 @@ describe('GroupElement', () => {
     });
     describe(`${attr} attribute`, () => {
       it('is passed to all its children', () => {
-        expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok()
+        expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
         expect(group.querySelector('div').getAttribute(attr)).to.be(null);
       });
-    })
+    });
   });
 });

@@ -50,7 +50,7 @@ describe('TextElement', () => {
 
         it('inserts the template and executes the script in context', () => {
           expect(text.shadowRoot.querySelector('p').outerHTML)
-          .to.eql(`<p><em>Some text</em></p>`);
+          .to.eql('<p><em>Some text</em></p>');
         });
       });
 

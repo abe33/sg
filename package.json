@@ -8,9 +8,10 @@
     "test": "nyc mocha --timeout 5000 --recursive --compilers js:babel-register test/**/*.test.es6 test/*.test.es6",
     "lcov_report": "nyc report --reporter=lcov",
     "coverage": "npm run lcov_report && codecov",
-    "lint": "eslint .",
+    "lint": "eslint src/*.es6 test/*.es6",
+    "lint:fix": "eslint --fix src/*.es6 test/*.es6",
     "esdoc": "esdoc -c esdoc.json",
-    "prepublish": "npm run rollup",
+    "prepublishOnly": "npm run rollup",
     "rollup": "rollup -c",
     "start": "widjet-test-server test/**/*.test.es6"
   },

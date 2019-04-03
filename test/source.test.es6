@@ -24,7 +24,7 @@ describe('SourceElement', () => {
 
     it('places the inner html sources in a pre and code tags', () => {
       expect(src.shadowRoot.innerHTML.trim())
-      .to.eql(`<pre><code>&lt;div&gt;text&lt;/div&gt;</code></pre>`);
+      .to.eql('<pre><code>&lt;div&gt;text&lt;/div&gt;</code></pre>');
     });
   });
 
@@ -53,7 +53,7 @@ describe('SourceElement', () => {
 
       it('inserts the template and executes the script in context', () => {
         expect(src.shadowRoot.querySelector('code').outerHTML)
-        .to.eql(`<code>&lt;div&gt;text&lt;/div&gt;</code>`);
+        .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
       });
     });
 
@@ -81,7 +81,7 @@ describe('SourceElement', () => {
 
       it('inserts the template and executes the script in context', () => {
         expect(src.shadowRoot.querySelector('code').outerHTML)
-        .to.eql(`<code>&lt;div&gt;text&lt;/div&gt;</code>`);
+        .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
       });
     });
 
