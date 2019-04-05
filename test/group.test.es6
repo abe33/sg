@@ -31,9 +31,30 @@ describe('GroupElement', () => {
         group = getTestRoot().querySelector('sg-group');
       });
 
-      it('is passed to all its children', () => {
+      it('forwards the attribute to all its children', () => {
         expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
         expect(group.querySelector('div').getAttribute(attr)).to.be(null);
+      });
+
+      describe('adding an item in the group', () => {
+        it('forwards the attribute to the newly added element', () => {
+          const item = document.createElement('sg-item');
+          group.appendChild(item);
+          expect(item.getAttribute(attr)).to.eql('value');
+        });
+      });
+
+      describe('replacing the element inner HTML', () => {
+        it('forwards the attribute to the newly added elements', () => {
+          group.innerHTML = `
+            <sg-item></sg-item>
+            <sg-item></sg-item>
+            <sg-item></sg-item>
+            <div></div>`;
+
+          expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
+          expect(group.querySelector('div').getAttribute(attr)).to.be(null);
+        });
       });
     });
   });
