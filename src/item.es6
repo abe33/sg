@@ -56,16 +56,13 @@ export default class ItemElement extends mix(HTMLElement)
 
   appendChild(node) {
     if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta', 'sg-preview'].includes(node.nodeName.toLowerCase())) {
-      this.forwardAttributes(node);
       super.appendChild(node);
     } else {
       if (node.nodeType === 1) {
         const sample = getNode(`<sg-sample>${node.outerHTML}</sg-sample>`);
-        this.forwardAttributes(sample);
         super.appendChild(sample);
       } else {
         const text = getNode(`<sg-text>${node.textContent}</sg-text>`);
-        this.forwardAttributes(text);
         super.appendChild(text);
       }
     }
