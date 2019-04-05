@@ -1,19 +1,8 @@
 'use strict';
 
-import GroupElement from './group';
-import ItemElement from './item';
-import SampleElement from './sample';
-import ScriptElement from './script';
-import SourceElement from './source';
-import TextElement from './text';
-
-const sg = {
-  GroupElement,
-  ItemElement,
-  SampleElement,
-  ScriptElement,
-  SourceElement,
-  TextElement,
-};
-
-export default sg;
+export {default as GroupElement} from './group';
+export {default as ItemElement} from './item';
+export {default as SampleElement} from './sample';
+export {default as ScriptElement} from './script';
+export {default as SourceElement} from './source';
+export {default as TextElement} from './text';
