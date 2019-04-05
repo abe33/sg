@@ -156,7 +156,7 @@ One interesting example is to use a template script to implement the support for
   </sg-script>
 </template>
 
-sg-item>
+<sg-item>
   <button>Some text</button>
 </sg-item>
 ```
