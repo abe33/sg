@@ -33,6 +33,11 @@ export default function ForwardAttributes(map) {
       super.appendChild(child);
       this.forwardAttributes(child);
     }
+
+    insertBefore(child, node) {
+      super.insertBefore(child, node);
+      this.forwardAttributes(child);
+    }
   };
 }
 

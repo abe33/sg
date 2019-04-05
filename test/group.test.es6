@@ -44,6 +44,14 @@ describe('GroupElement', () => {
         });
       });
 
+      describe('inserting an item in the group', () => {
+        it('forwards the attribute to the newly added element', () => {
+          const item = document.createElement('sg-item');
+          group.insertBefore(item, group.firstChild);
+          expect(item.getAttribute(attr)).to.eql('value');
+        });
+      });
+
       describe('replacing the element inner HTML', () => {
         it('forwards the attribute to the newly added elements', () => {
           group.innerHTML = `

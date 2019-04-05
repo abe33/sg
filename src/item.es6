@@ -68,6 +68,20 @@ export default class ItemElement extends mix(HTMLElement)
     }
   }
 
+  insertBefore(node, target) {
+    if (['sg-sample', 'sg-src', 'sg-text', 'sg-meta', 'sg-preview'].includes(node.nodeName.toLowerCase())) {
+      super.insertBefore(node, target);
+    } else {
+      if (node.nodeType === 1) {
+        const sample = getNode(`<sg-sample>${node.outerHTML}</sg-sample>`);
+        super.insertBefore(sample, target);
+      } else {
+        const text = getNode(`<sg-text>${node.textContent}</sg-text>`);
+        super.insertBefore(text, target);
+      }
+    }
+  }
+
   parseContent(originalContent) {
     if (originalContent.childNodes.length > 0) {
       const data = this.gatherData(originalContent.childNodes);

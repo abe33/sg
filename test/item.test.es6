@@ -120,10 +120,6 @@ describe('ItemElement', () => {
         });
       });
 
-      describe('that is a text node', () => {
-
-      });
-
       describe('that is a known sg-* element', () => {
         it('adds sg-sample as part of the sample collection', () => {
           item.appendChild(getNode('<sg-sample>foo</sg-sample>'));
@@ -177,6 +173,105 @@ describe('ItemElement', () => {
             '<sg-sample><div class="dummy"></div></sg-sample>',
             '<sg-src lang="html"><div class="dummy"></div></sg-src>',
             '<sg-meta name="foo" content="bar"></sg-meta>',
+          ].join(''));
+
+          expect(item.meta).to.eql({foo: 'bar'});
+        });
+      });
+    });
+
+    describe('inserting a new element', () => {
+      beforeEach(() => {
+        expect(item.innerHTML).to.eql([
+          '<sg-sample><div class="dummy"></div></sg-sample>',
+          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+        ].join(''));
+      });
+
+      describe('that is an unknown element node', () => {
+        it('adds a sg-sample node as part of the sample collection', () => {
+          item.insertBefore(getNode('<div>foo</div>'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample><div>foo</div></sg-sample>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+
+          expect(asSource(item.samples)).to.eql([
+            '<sg-sample><div>foo</div></sg-sample>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+          ]);
+        });
+
+        it('adds a sg-text node as part of the text collection', () => {
+          item.insertBefore(document.createTextNode('foo'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-text>foo</sg-text>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+
+          expect(asSource(item.texts)).to.eql([
+            '<sg-text>foo</sg-text>',
+          ]);
+        });
+      });
+
+      describe('that is a known sg-* element', () => {
+        it('adds sg-sample as part of the sample collection', () => {
+          item.insertBefore(getNode('<sg-sample>foo</sg-sample>'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-sample>foo</sg-sample>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+
+          expect(asSource(item.samples)).to.eql([
+            '<sg-sample>foo</sg-sample>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+          ]);
+        });
+
+        it('adds sg-src as part of the sources collection', () => {
+          item.insertBefore(getNode('<sg-src>foo</sg-src>'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-src>foo</sg-src>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+
+          expect(asSource(item.sources)).to.eql([
+            '<sg-src>foo</sg-src>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ]);
+        });
+
+        it('adds sg-text as part of the texts collection', () => {
+          item.insertBefore(getNode('<sg-text>foo</sg-text>'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-text>foo</sg-text>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
+          ].join(''));
+
+
+          expect(asSource(item.texts)).to.eql([
+            '<sg-text>foo</sg-text>',
+          ]);
+        });
+
+        it('adds sg-meta as part of the meta object', () => {
+          item.insertBefore(getNode('<sg-meta name="foo" content="bar"></sg-meta>'), item.firstChild);
+
+          expect(item.innerHTML).to.eql([
+            '<sg-meta name="foo" content="bar"></sg-meta>',
+            '<sg-sample><div class="dummy"></div></sg-sample>',
+            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
           ].join(''));
 
           expect(item.meta).to.eql({foo: 'bar'});
@@ -562,6 +657,14 @@ describe('ItemElement', () => {
       item.appendChild(getNode('<sg-sample><div class="dummy"></div></sg-sample>'));
       expect(item.querySelector('sg-sample').getAttribute('slot')).to.eql('name');
     });
+
+    it('sets the slot attribute on inserted samples', () => {
+      setPageContent('<sg-item samples-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.insertBefore(getNode('<sg-sample><div class="dummy"></div></sg-sample>'), item.firstChild);
+      expect(item.querySelector('sg-sample').getAttribute('slot')).to.eql('name');
+    });
   });
   describe('sources-slot attribute', () => {
     it('sets the slot attribute on generated sources', () => {
@@ -580,6 +683,14 @@ describe('ItemElement', () => {
 
       item = getTestRoot().querySelector('sg-item');
       item.appendChild(getNode('<sg-src><div class="dummy"></div></sg-src>'));
+      expect(item.querySelector('sg-src').getAttribute('slot')).to.eql('name');
+    });
+
+    it('sets the slot attribute on inserted sources', () => {
+      setPageContent('<sg-item sources-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.insertBefore(getNode('<sg-src><div class="dummy"></div></sg-src>'), item.firstChild);
       expect(item.querySelector('sg-src').getAttribute('slot')).to.eql('name');
     });
   });
@@ -603,6 +714,14 @@ describe('ItemElement', () => {
       item.appendChild(getNode('<sg-text>foo</sg-text>'));
       expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
     });
+
+    it('sets the slot attribute on inserted texts', () => {
+      setPageContent('<sg-item texts-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.insertBefore(getNode('<sg-text>foo</sg-text>'), item.firstChild);
+      expect(item.querySelector('sg-text').getAttribute('slot')).to.eql('name');
+    });
   });
   describe('previews-slot attribute', () => {
     it('sets the slot attribute on generated previews', () => {
@@ -621,6 +740,14 @@ describe('ItemElement', () => {
 
       item = getTestRoot().querySelector('sg-item');
       item.appendChild(getNode('<sg-preview>foo</sg-preview>'));
+      expect(item.querySelector('sg-preview').getAttribute('slot')).to.eql('name');
+    });
+
+    it('sets the slot attribute on appended previews', () => {
+      setPageContent('<sg-item previews-slot="name"></sg-item>');
+
+      item = getTestRoot().querySelector('sg-item');
+      item.insertBefore(getNode('<sg-preview>foo</sg-preview>'), item.firstChild);
       expect(item.querySelector('sg-preview').getAttribute('slot')).to.eql('name');
     });
   });
