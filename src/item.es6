@@ -3,7 +3,7 @@
 import {asArray, getNode} from 'widjet-utils';
 import {forName, copyAttribute} from './utils/attributes';
 import getContentAsFragment from './utils/getContentAsFragment';
-import getStringAsFragment from './utils/getStringAsFragment';
+import stringToFragment from './utils/stringToFragment';
 import HasTemplate from './mixins/has-template';
 import HasPreview from './mixins/has-preview';
 import HasMeta from './mixins/has-meta';
@@ -33,7 +33,7 @@ export default class ItemElement extends mix(HTMLElement)
   }
 
   set innerHTML(html) {
-    this.parseContent(getStringAsFragment(html));
+    this.parseContent(stringToFragment(html));
   }
 
   get innerHTML() {
