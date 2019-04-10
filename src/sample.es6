@@ -3,6 +3,7 @@
 import {asArray} from 'widjet-utils';
 import HasTemplate from './mixins/has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
+import fragmentToString from './utils/fragmentToString'
 import mix from './utils/mix';
 
 export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
@@ -35,9 +36,23 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
       const slot = templateContent.querySelector('slot');
 
       if (slot) {
-        slot.parentNode.insertBefore(initialContent, slot);
-        slot.remove();
-        content = templateContent;
+        // We're building a fake fragment with the body of the iframe.
+        // Inside the iframe we still want to use the template and shadow DOM
+        // so that it stays consistent with the host page.
+        content = {
+          children: [
+            {
+              outerHTML: `
+              <body>
+                ${fragmentToString(initialContent)}}
+                <script type="text/javascript">
+                  const root = document.body.attachShadow({mode: 'open'});
+                  root.innerHTML = \`${fragmentToString(templateContent)}\`;
+                </script>
+              </body>`,
+            },
+          ],
+        };
       } else {
         content = initialContent;
 
@@ -61,7 +76,7 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
 
     const frame = this.querySelector('iframe');
     frame.contentDocument.open();
-    frame.contentDocument.write(asArray(content.children).map(n => n.outerHTML).join(''));
+    frame.contentDocument.write(fragmentToString(content));
     frame.contentDocument.close();
   }
 }

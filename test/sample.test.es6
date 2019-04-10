@@ -214,8 +214,9 @@ describe('SampleElement', () => {
         it('writes the item content in the iframe at the slot position', () => {
           const iframe = sample.querySelector('iframe');
 
-          expect(iframe.contentDocument.body.querySelector('.container')).not.to.be(null);
-          expect(iframe.contentDocument.body.querySelector('.container > div')).not.to.be(null);
+          expect(iframe.contentDocument.body.shadowRoot.querySelector('.container')).not.to.be(null);
+          expect(iframe.contentDocument.body.shadowRoot.querySelector('.container > slot')).not.to.be(null);
+          expect(iframe.contentDocument.body.querySelector('div')).not.to.be(null);
         });
       });
       describe('that has no slot', () => {
@@ -264,8 +265,9 @@ describe('SampleElement', () => {
         it('writes the item content in the iframe at the slot position', () => {
           const iframe = sample.querySelector('iframe');
 
-          expect(iframe.contentDocument.body.querySelector('.container')).not.to.be(null);
-          expect(iframe.contentDocument.body.querySelector('.container > div')).not.to.be(null);
+          expect(iframe.contentDocument.body.shadowRoot.querySelector('.container')).not.to.be(null);
+          expect(iframe.contentDocument.body.shadowRoot.querySelector('.container > slot')).not.to.be(null);
+          expect(iframe.contentDocument.body.querySelector('div')).not.to.be(null);
         });
       });
       describe('that has no slot', () => {
