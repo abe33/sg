@@ -1,9 +1,8 @@
 'use strict';
 
-import {asArray} from 'widjet-utils';
 import HasTemplate from './mixins/has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
-import fragmentToString from './utils/fragmentToString'
+import fragmentToString from './utils/fragmentToString';
 import mix from './utils/mix';
 
 export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
