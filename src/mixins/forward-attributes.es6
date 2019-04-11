@@ -27,6 +27,9 @@ export default function ForwardAttributes(map) {
           map[attr](target, this);
         }
       }
+      if (target.childElementCount) {
+        asArray(target.children).forEach(n => this.forwardAttributes(n));
+      }
     }
 
     appendChild(child) {

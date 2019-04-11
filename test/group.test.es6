@@ -24,22 +24,34 @@ describe('GroupElement', () => {
             <sg-item></sg-item>
             <sg-item></sg-item>
             <sg-item></sg-item>
-            <div></div>
+            <div>
+              <sg-item></sg-item>
+            </div>
           </sg-group>
         `);
 
         group = getTestRoot().querySelector('sg-group');
       });
 
-      it('forwards the attribute to all its children', () => {
+      it('forwards the attribute to all its matching children', () => {
         expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
         expect(group.querySelector('div').getAttribute(attr)).to.be(null);
       });
 
       describe('adding an item in the group', () => {
-        it('forwards the attribute to the newly added element', () => {
+        it('forwards the attribute to the newly added child', () => {
           const item = document.createElement('sg-item');
           group.appendChild(item);
+          expect(item.getAttribute(attr)).to.eql('value');
+        });
+
+        it('forwards the attribute to a newly added descendant', () => {
+          const item = document.createElement('sg-item');
+          const parent = document.createElement('div');
+
+          parent.appendChild(item);
+          group.appendChild(parent);
+
           expect(item.getAttribute(attr)).to.eql('value');
         });
       });
@@ -50,6 +62,16 @@ describe('GroupElement', () => {
           group.insertBefore(item, group.firstChild);
           expect(item.getAttribute(attr)).to.eql('value');
         });
+
+        it('forwards the attribute to a newly inserted descendant', () => {
+          const item = document.createElement('sg-item');
+          const parent = document.createElement('div');
+
+          parent.insertBefore(item, parent.firstChild);
+          group.insertBefore(parent, group.firstChild);
+
+          expect(item.getAttribute(attr)).to.eql('value');
+        });
       });
 
       describe('replacing the element inner HTML', () => {
@@ -58,7 +80,9 @@ describe('GroupElement', () => {
             <sg-item></sg-item>
             <sg-item></sg-item>
             <sg-item></sg-item>
-            <div></div>`;
+            <div>
+              <sg-item></sg-item>
+            </div>`;
 
           expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
           expect(group.querySelector('div').getAttribute(attr)).to.be(null);
