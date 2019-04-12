@@ -1,6 +1,7 @@
 'use strict';
 
 import {merge} from 'widjet-utils';
+import warnSpan from '../utils/warnSpan';
 
 const DEFAULT_OPTIONS = {
   mandatorySlot: true,
@@ -24,7 +25,7 @@ export default function HasTemplate(superclass) {
         if (options.mandatorySlot && !templateContent.querySelector('slot')) {
           shadowRoot.innerHTML = `
           <slot></slot>
-          <span style="color: orange;">A #${tplId} template was found but it didn\'t have a slot.</span>`;
+          ${warnSpan(`A #${tplId} template was found but it didn\'t have a slot.`).outerHTML}`;
         } else {
           shadowRoot.appendChild(templateContent.cloneNode(true));
         }
@@ -32,7 +33,7 @@ export default function HasTemplate(superclass) {
         const shadowRoot = this.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = `
         <slot></slot>
-        <span style="color: orange;">The specified template #${tplId} was not found.</span>`;
+        ${warnSpan(`The specified template #${tplId} was not found.`).outerHTML}`;
       } else {
         this.renderDefaultTemplate();
       }

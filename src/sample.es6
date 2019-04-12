@@ -4,6 +4,7 @@ import HasTemplate from './mixins/has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
 import fragmentToString from './utils/fragmentToString';
 import mix from './utils/mix';
+import warnSpan from './utils/warnSpan';
 
 export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
   constructor() {
@@ -47,18 +48,14 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
           </script>
         </body>`;
       } else {
-        const warning = document.createElement('span');
-        warning.style.color = 'orange';
-        warning.textContent = `A #${tplId} template was found but it didn\'t have a slot.`;
+        const warning = warnSpan(`A #${tplId} template was found but it didn\'t have a slot.`);
         initialContent.insertBefore(warning, initialContent.firstChild);
         html = fragmentToString(initialContent);
       }
 
     } else {
       if (this.hasAttribute('iframe-template')) {
-        const warning = document.createElement('span');
-        warning.style.color = 'orange';
-        warning.textContent = `The specified template #${tplId} was not found.`;
+        const warning = warnSpan(`The specified template #${tplId} was not found.`);
         initialContent.insertBefore(warning, initialContent.firstChild);
       }
 
