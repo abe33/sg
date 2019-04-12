@@ -9,6 +9,8 @@ import {waitsFor} from 'widjet-test-utils/async';
 
 
 describe('ScriptElement', () => {
+  let script;
+
   beforeEach(() => {
     window.testCallback = sinon.spy();
   });
@@ -20,12 +22,14 @@ describe('ScriptElement', () => {
     beforeEach(() => {
       setPageContent(`
         <sg-script>
-          testCallback();
+          testCallback(currentScript);
         </sg-script>`);
+
+      script = getTestRoot().querySelector('sg-script');
     });
 
     it('executes the script as soon as possible', () => {
-      expect(window.testCallback.called).to.be.ok();
+      expect(window.testCallback.calledWith(script)).to.be.ok();
     });
   });
 
@@ -33,7 +37,7 @@ describe('ScriptElement', () => {
     beforeEach(() => {
       setPageContent('<sg-script src="/test/fixtures/script.es6"></sg-script>');
 
-      const script = getTestRoot().querySelector('sg-script');
+      script = getTestRoot().querySelector('sg-script');
       const loadSpy = sinon.spy();
       script.addEventListener('load', loadSpy);
 
@@ -41,7 +45,26 @@ describe('ScriptElement', () => {
     });
 
     it('executes the script as soon as possible', () => {
-      expect(window.testCallback.called).to.be.ok();
+      expect(window.testCallback.calledWith(script)).to.be.ok();
+    });
+  });
+
+  describe('inside a shadow DOM', () => {
+    let div, root;
+
+    beforeEach(() => {
+      setPageContent('<div></div>');
+      div = getTestRoot().querySelector('div');
+      root = div.attachShadow({mode: 'open'});
+      root.innerHTML = `
+        <sg-script>
+          testCallback(currentScript, currentRoot, currentHost);
+        </sg-script>`;
+      script = root.querySelector('sg-script');
+    });
+
+    it('executes the script while providing proper context inside shadow DOM', () => {
+      expect(window.testCallback.calledWith(script, root, div)).to.be.ok();
     });
   });
 });

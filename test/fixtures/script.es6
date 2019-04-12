@@ -1,1 +1,1 @@
-testCallback();
+testCallback(currentScript);
