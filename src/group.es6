@@ -2,6 +2,7 @@
 
 import {copyAttribute, forName} from './utils/attributes';
 import HasMeta from './mixins/has-meta';
+import HasTemplate from './mixins/has-template';
 import ForwardAttributes from './mixins/forward-attributes';
 import mix from './utils/mix';
 
@@ -14,7 +15,13 @@ const ATTRIBUTES_MAP = {
 };
 
 export default class GroupElement extends mix(HTMLElement)
-  .with(HasMeta, ForwardAttributes(ATTRIBUTES_MAP)) {
+  .with(HasMeta, HasTemplate, ForwardAttributes(ATTRIBUTES_MAP)) {
+
+  constructor() {
+    super();
+
+    this.consumeTemplate({defaultTemplateId: 'sg-group'});
+  }
 }
 
 customElements.define('sg-group', GroupElement);
