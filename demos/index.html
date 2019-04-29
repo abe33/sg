@@ -69,7 +69,7 @@
 
     <template id="sg-src">
       <pre><code></code></pre>
-      <sg-script type="text/javascript">
+      <sg-script>
         const lang = currentHost.getAttribute('lang') || 'html';
         const code = currentRoot.querySelector('code');
 
@@ -84,7 +84,7 @@
         }
       </style>
       <div class="marked"></div>
-      <sg-script type="text/javascript">
+      <sg-script>
         const code = currentRoot.querySelector('.marked');
         let source = currentHost.innerHTML;
         const match = source.match(/^[\n]*(\s+)/);

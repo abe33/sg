@@ -55,6 +55,7 @@ export default class ScriptElement extends HTMLElement {
       script.innerHTML = wrapSource(source, id);
       this.innerHTML = '';
       this.appendChild(script);
+      this.style.display = 'none';
     }
   }
 }
