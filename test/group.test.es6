@@ -1,7 +1,6 @@
 'use strict';
 
 import expect from 'expect.js';
-import {asArray} from 'widjet-utils';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/group';
@@ -11,6 +10,7 @@ describe('GroupElement', () => {
 
   [
     'template',
+    'items-template',
     'samples-slot',
     'sources-slot',
     'previews-slot',
@@ -21,72 +21,31 @@ describe('GroupElement', () => {
       beforeEach(() => {
         setPageContent(`
           <sg-group ${attr}="value">
-            <sg-item></sg-item>
-            <sg-item></sg-item>
-            <sg-item></sg-item>
-            <div>
+            <sg-group ${attr}="other-value">
               <sg-item></sg-item>
-            </div>
+            </sg-group>
+
+            <sg-group>
+              <sg-item></sg-item>
+            </sg-group>
           </sg-group>
         `);
 
         group = getTestRoot().querySelector('sg-group');
       });
 
-      it('forwards the attribute to all its matching children', () => {
-        expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
-        expect(group.querySelector('div').getAttribute(attr)).to.be(null);
+      it('inherits the attribute from its parent group', () => {
+        const target = group.querySelector(`sg-group:not([${attr}])`);
+        expect(target.getAttribute(attr)).to.eql('value');
+        expect(target.hasAttribute(attr)).to.be(false);
+        expect(target.hasInheritedAttribute(attr)).to.be(true);
       });
 
-      describe('adding an item in the group', () => {
-        it('forwards the attribute to the newly added child', () => {
-          const item = document.createElement('sg-item');
-          group.appendChild(item);
-          expect(item.getAttribute(attr)).to.eql('value');
-        });
-
-        it('forwards the attribute to a newly added descendant', () => {
-          const item = document.createElement('sg-item');
-          const parent = document.createElement('div');
-
-          parent.appendChild(item);
-          group.appendChild(parent);
-
-          expect(item.getAttribute(attr)).to.eql('value');
-        });
-      });
-
-      describe('inserting an item in the group', () => {
-        it('forwards the attribute to the newly added element', () => {
-          const item = document.createElement('sg-item');
-          group.insertBefore(item, group.firstChild);
-          expect(item.getAttribute(attr)).to.eql('value');
-        });
-
-        it('forwards the attribute to a newly inserted descendant', () => {
-          const item = document.createElement('sg-item');
-          const parent = document.createElement('div');
-
-          parent.insertBefore(item, parent.firstChild);
-          group.insertBefore(parent, group.firstChild);
-
-          expect(item.getAttribute(attr)).to.eql('value');
-        });
-      });
-
-      describe('replacing the element inner HTML', () => {
-        it('forwards the attribute to the newly added elements', () => {
-          group.innerHTML = `
-            <sg-item></sg-item>
-            <sg-item></sg-item>
-            <sg-item></sg-item>
-            <div>
-              <sg-item></sg-item>
-            </div>`;
-
-          expect(asArray(group.querySelectorAll('sg-item')).every(n => n.getAttribute(attr) === 'value')).to.be.ok();
-          expect(group.querySelector('div').getAttribute(attr)).to.be(null);
-        });
+      it('preserves its own attribute value', () => {
+        const target = group.querySelector(`sg-group[${attr}]`);
+        expect(target.getAttribute(attr)).to.eql('other-value');
+        expect(target.hasAttribute(attr)).to.be(true);
+        expect(target.hasInheritedAttribute(attr)).to.be(false);
       });
     });
   });

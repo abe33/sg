@@ -751,4 +751,46 @@ describe('ItemElement', () => {
       expect(item.querySelector('sg-preview').getAttribute('slot')).to.eql('name');
     });
   });
+
+  const map = {
+    'template': 'items-template',
+    'samples-slot': 'samples-slot',
+    'texts-slot': 'texts-slot',
+    'sources-slot': 'sources-slot',
+    'previews-slot': 'previews-slot',
+  };
+
+  Object.keys(map).forEach(attr => {
+    const inheritedAttr = map[attr];
+
+    describe(`${attr} attribute`, () => {
+      let group;
+
+      beforeEach(() => {
+        setPageContent(`
+          <sg-group ${inheritedAttr}="value">
+            <sg-item ${attr}="other-value"></sg-item>
+
+            <sg-item></sg-item>
+          </sg-group>
+        `);
+
+        group = getTestRoot().querySelector('sg-group');
+      });
+
+      it('inherits the attribute from its parent group', () => {
+        const target = group.querySelector(`sg-item:not([${attr}])`);
+        expect(target.getAttribute(attr)).to.eql('value');
+        expect(target.hasAttribute(attr)).to.be(false);
+        expect(target.hasInheritedAttribute(attr)).to.be(true);
+      });
+
+      it('preserves its own attribute value', () => {
+        const target = group.querySelector(`sg-item[${attr}]`);
+        expect(target.getAttribute(attr)).to.eql('other-value');
+        expect(target.hasAttribute(attr)).to.be(true);
+        expect(target.hasInheritedAttribute(attr)).to.be(false);
+      });
+    });
+  });
 });

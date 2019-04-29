@@ -1,17 +1,18 @@
 'use strict';
 
-export function copyAttribute(attrSrc, attrDest) {
+export function hasAttribute(node, attr) {
+  return node.hasAttribute(attr) ||
+        (node.hasInheritedAttribute && node.hasInheritedAttribute(attr));
+}
+
+export function copyAttribute(attrSrc, attrDest = attrSrc) {
   return (a, b) => {
     if (!a.hasAttribute(attrDest)) {
-      a.setAttribute(attrDest || attrSrc, b.getAttribute(attrSrc));
+      a.setAttribute(attrDest, b.getAttribute(attrSrc));
     }
   };
 }
 
-export function forName(type, f) {
-  return (n, ...args) => n.nodeName.toLowerCase() === type && f(n, ...args);
-}
-
-export function onList(f) {
-  return (a, ...args) => a.forEach(o => f(o, ...args));
+export function forSelector(selector, f) {
+  return (n, ...args) => n.matches(selector) && f(n, ...args);
 }

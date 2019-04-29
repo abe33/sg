@@ -1,6 +1,7 @@
 'use strict';
 
 import {asArray} from 'widjet-utils';
+import {hasAttribute} from '../utils/attributes';
 
 export default function ForwardAttributes(map) {
   return (superclass) => class extends superclass {
@@ -15,15 +16,13 @@ export default function ForwardAttributes(map) {
       return super.innerHTML;
     }
 
-    constructor() {
-      super();
-
+    connectedCallback() {
       asArray(this.children).forEach(n => this.forwardAttributes(n));
     }
 
     forwardAttributes(target) {
       for (const attr in map) {
-        if (this.hasAttribute(attr)) {
+        if (hasAttribute(this, attr)) {
           map[attr](target, this);
         }
       }

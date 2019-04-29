@@ -62,9 +62,9 @@
         </tr>
       </table>
 
-        <sg-script>
-          currentHost.appendChild(currentHost.getPreview());
-        </sg-script>
+      <sg-script>
+        currentHost.appendChild(currentHost.getPreview());
+      </sg-script>
     </template>
 
     <template id="sg-src">
@@ -112,7 +112,12 @@
       <button>Some text</button>
     </sg-item>
 
-    <sg-group template="right-col-sample" samples-slot="right-col" texts-slot="left-col" sources-slot="left-col" previews-slot="preview">
+    <sg-group items-template="right-col-sample"
+              samples-slot="right-col"
+              texts-slot="left-col"
+              sources-slot="left-col"
+              previews-slot="preview">
+
       <sg-item>
         ### Some Button Example
 

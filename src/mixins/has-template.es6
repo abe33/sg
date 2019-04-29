@@ -10,11 +10,12 @@ const DEFAULT_OPTIONS = {
 export default function HasTemplate(superclass) {
   return class extends superclass {
     consumeTemplate(options = {}) {
+      if (this.shadowRoot) { return; }
+
       options = merge(DEFAULT_OPTIONS, options);
 
-      const tplId = this.hasAttribute('template')
-        ? this.getAttribute('template')
-        : options.defaultTemplateId;
+      const tplAttr = this.getAttribute('template');
+      const tplId = tplAttr || options.defaultTemplateId;
 
       const tpl = document.getElementById(tplId);
 
@@ -29,7 +30,7 @@ export default function HasTemplate(superclass) {
         } else {
           shadowRoot.appendChild(templateContent.cloneNode(true));
         }
-      } else if (this.hasAttribute('template')) {
+      } else if (tplAttr) {
         const shadowRoot = this.attachShadow({mode: 'open'});
         shadowRoot.innerHTML = `
         <slot></slot>

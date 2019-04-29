@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {waitsFor} from 'widjet-test-utils/async';
 
 describe('PreviewElement', () => {
   it('wraps its content in a svg foreign object when added to the DOM', () => {
@@ -10,7 +11,7 @@ describe('PreviewElement', () => {
       </sg-preview>`);
 
     const preview = getTestRoot().querySelector('sg-preview');
-    expect(preview.querySelector('svg foreignObject div')).not.to.be(null);
+    return waitsFor(() => preview.querySelector('svg foreignObject div'));
   });
 
   it('measures its content and use that as viewbox of the svg element', () => {
@@ -20,14 +21,18 @@ describe('PreviewElement', () => {
         <div>text</div>
       </sg-preview>`);
 
-    const svg = getTestRoot().querySelector('sg-preview svg');
-    const sample = getTestRoot().querySelector('div');
-    const sampleBounds = sample.getBoundingClientRect();
+    return waitsFor(() => getTestRoot().querySelector('sg-preview svg'))
+    .then(() => {
+      const svg = getTestRoot().querySelector('sg-preview svg');
+      const sample = getTestRoot().querySelector('div');
+      const sampleBounds = sample.getBoundingClientRect();
 
-    expect(svg.viewBox.baseVal.y).to.eql(0);
-    expect(svg.viewBox.baseVal.x).to.eql(0);
-    expect(svg.viewBox.baseVal.width).to.eql(sampleBounds.width);
-    expect(svg.viewBox.baseVal.height).to.eql(sampleBounds.height);
+      expect(svg.viewBox.baseVal.y).to.eql(0);
+      expect(svg.viewBox.baseVal.x).to.eql(0);
+      expect(svg.viewBox.baseVal.width).to.eql(sampleBounds.width);
+      expect(svg.viewBox.baseVal.height).to.eql(sampleBounds.height);
+    });
+
   });
 
   it('measures its content and use that as coordinates of the foreign object', () => {
@@ -37,13 +42,16 @@ describe('PreviewElement', () => {
         <div>text</div>
       </sg-preview>`);
 
-    const fo = getTestRoot().querySelector('sg-preview svg foreignObject');
-    const sample = getTestRoot().querySelector('div');
-    const sampleBounds = sample.getBoundingClientRect();
+    return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
+    .then(() => {
+      const fo = getTestRoot().querySelector('sg-preview svg foreignObject');
+      const sample = getTestRoot().querySelector('div');
+      const sampleBounds = sample.getBoundingClientRect();
 
-    expect(fo.getAttribute('y')).to.eql('0');
-    expect(fo.getAttribute('x')).to.eql('0');
-    expect(fo.getAttribute('width')).to.eql(`${sampleBounds.width}`);
-    expect(fo.getAttribute('height')).to.eql(`${sampleBounds.height}`);
+      expect(fo.getAttribute('y')).to.eql('0');
+      expect(fo.getAttribute('x')).to.eql('0');
+      expect(fo.getAttribute('width')).to.eql(`${sampleBounds.width}`);
+      expect(fo.getAttribute('height')).to.eql(`${sampleBounds.height}`);
+    });
   });
 });

@@ -1,24 +1,35 @@
 'use strict';
 
 import {asArray, getNode} from 'widjet-utils';
-import {forName, copyAttribute} from './utils/attributes';
+import {forSelector, copyAttribute} from './utils/attributes';
 import getContentAsFragment from './utils/getContentAsFragment';
 import stringToFragment from './utils/stringToFragment';
 import HasTemplate from './mixins/has-template';
 import HasPreview from './mixins/has-preview';
 import HasMeta from './mixins/has-meta';
 import ForwardAttributes from './mixins/forward-attributes';
+import InheritAttributes from './mixins/inherit-attributes';
 import mix from './utils/mix';
 
-const ATTRIBUTES_MAP = {
-  'samples-slot': forName('sg-sample', copyAttribute('samples-slot', 'slot')),
-  'texts-slot': forName('sg-text', copyAttribute('texts-slot', 'slot')),
-  'sources-slot': forName('sg-src', copyAttribute('sources-slot', 'slot')),
-  'previews-slot': forName('sg-preview', copyAttribute('previews-slot', 'slot')),
+const INHERITED = {
+  'template': 'items-template',
+  'samples-slot': 'samples-slot',
+  'texts-slot': 'texts-slot',
+  'sources-slot': 'sources-slot',
+  'previews-slot': 'previews-slot',
+};
+
+const FORWARDED = {
+  'samples-slot': forSelector('sg-sample', copyAttribute('samples-slot', 'slot')),
+  'texts-slot': forSelector('sg-text', copyAttribute('texts-slot', 'slot')),
+  'sources-slot': forSelector('sg-src', copyAttribute('sources-slot', 'slot')),
+  'previews-slot': forSelector('sg-preview', copyAttribute('previews-slot', 'slot')),
 };
 
 export default class ItemElement extends mix(HTMLElement)
-  .with(HasTemplate, HasPreview, HasMeta, ForwardAttributes(ATTRIBUTES_MAP)) {
+  .with(HasTemplate, HasPreview, HasMeta,
+        InheritAttributes('sg-group', INHERITED),
+        ForwardAttributes(FORWARDED)) {
 
   get sources() {
     return asArray(this.querySelectorAll('sg-src'));
@@ -43,11 +54,15 @@ export default class ItemElement extends mix(HTMLElement)
   constructor() {
     super();
 
+    this.parseContent(getContentAsFragment(this));
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+
     this.consumeTemplate({
       defaultTemplateId: 'sg-item',
     });
-
-    this.parseContent(getContentAsFragment(this));
   }
 
   getPreview() {
