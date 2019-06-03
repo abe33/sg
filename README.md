@@ -160,3 +160,33 @@ One interesting example is to use a template script to implement the support for
   <button>Some text</button>
 </sg-item>
 ```
+
+### Groups
+
+Additionally to items, another building block is available in the form of `sg-group` objects.
+
+A group is a container whose attributes will serve as default values for its descendants groups and items.
+
+```html
+<sg-group items-template="some-template">
+
+  <sg-group items-template="some-other-template" samples-slot="some-slot">
+    <!-- uses `#some-other-template` template and samples goes into `some-slot` -->
+    <sg-item></sg-item>
+  </sg-group>
+
+  <!-- uses `#some-template` template -->
+  <sg-item></sg-item>
+</sg-group>
+```
+
+As you can see in the example above, groups can be nested inside other groups and can redefine attributes defined by their ancestor.
+Ultimately an item will either uses its own attributes or will reach the nearest ancestor otherwise.
+
+|Attribute|Description|
+|---|---|
+|`items-template`|The template to be used by the descendant items that do not define their own template.|
+|`samples-slot`|The target `slot` for an item's samples elements|
+|`texts-slot`|The target `slot` for an item's texts elements|
+|`sources-slot`|The target `slot` for an item's sources elements|
+|`previews-slot`|The target `slot` for an item's preview|
