@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {asArray} from 'widjet-utils';
+import {setPageContent} from 'widjet-test-utils/dom';
 
 import FragmentLoader from '../src/fragments';
 
@@ -9,6 +10,7 @@ describe('Fragment loader', () => {
   let loader;
 
   beforeEach(() => {
+    setPageContent('');
     loader = new FragmentLoader();
   });
 
@@ -43,6 +45,44 @@ describe('Fragment loader', () => {
         return promise
         .then(() => { throw new Error('Expected promise to reject'); },
               () => {});
+      });
+    });
+
+    describe('with the attachTo option specified', () => {
+      describe('on an existing target', () => {
+        beforeEach(() => {
+          promise = loader.load('./test/fixtures/fragment.html', {
+            attachTo: '#mocha-container',
+          });
+        });
+
+        it('returns a promise that resolves with the fragment', () => {
+          return promise.then((fragment) => {
+            const container = document.getElementById('mocha-container');
+            const children = asArray(container.children);
+
+            expect(children.length).to.eql(3);
+            expect(children.map(n => n.outerHTML)).to.eql([
+              '<div class="div-1">Text</div>',
+              '<div class="div-2">Text</div>',
+              '<div class="div-3">Text</div>',
+            ]);
+          });
+        });
+      });
+
+      describe('on a non existing target', () => {
+        beforeEach(() => {
+          promise = loader.load('./test/fixtures/fragment.html', {
+            attachTo: '#foo',
+          });
+        });
+
+        it('returns a promise that will be rejected', () => {
+          return promise
+          .then(() => { throw new Error('Expected promise to reject'); },
+                () => {});
+        });
       });
     });
   });
@@ -92,5 +132,53 @@ describe('Fragment loader', () => {
               () => {});
       });
     });
+
+    describe('with the attachTo option specified', () => {
+      describe('on an existing target', () => {
+        beforeEach(() => {
+          promise = loader.load([
+            './test/fixtures/fragment.html',
+            './test/fixtures/fragment2.html',
+          ], {
+            attachTo: '#mocha-container',
+          });
+        });
+
+        it('returns a promise that resolves with the fragment', () => {
+          return promise.then((fragment) => {
+            const container = document.getElementById('mocha-container');
+            const children = asArray(container.children);
+
+            expect(children.length).to.eql(6);
+            expect(children.map(n => n.outerHTML)).to.eql([
+              '<div class="div-1">Text</div>',
+              '<div class="div-2">Text</div>',
+              '<div class="div-3">Text</div>',
+              '<div class="div-4">Text</div>',
+              '<div class="div-5">Text</div>',
+              '<div class="div-6">Text</div>',
+            ]);
+          });
+        });
+      });
+
+      describe('on a non existing target', () => {
+        beforeEach(() => {
+          promise = loader.load([
+            './test/fixtures/fragment.html',
+            './test/fixtures/fragment2.html',
+          ], {
+            attachTo: '#foo',
+          });
+        });
+
+        it('returns a promise that will be rejected', () => {
+          return promise
+          .then(() => { throw new Error('Expected promise to reject'); },
+                () => {});
+        });
+      });
+    });
+
   });
 });
