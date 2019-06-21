@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8">
 
-    <script type="text/javascript" src="../lib/index.js" defer></script>
+    <script type="text/javascript" src="../lib/browser.js" defer></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/twig.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/javascript.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/languages/scss.min.js" type='text/javascript'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.6.0/marked.min.js" type='text/javascript'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.6/lunr.min.js" type='text/javascript'></script>
 
     <link href="//db.onlinewebfonts.com/c/0a47d822ebef476322ae0428f93d4e89?family=Redacted" rel="stylesheet" type="text/css"/>
 
@@ -40,114 +41,55 @@
   </head>
 
   <body>
+    <script type="text/javascript" defer>
+      window.onload = () => {
+        let index;
+        const loader = new sg.FragmentLoader();
+        loader.load('./fragments/templates.html', {
+          attachTo: 'body',
+        })
+        .then(() => {
+          return loader.load([
+            './fragments/content.html',
+          ]);
+        }).then(fragments => {
+          let items = [];
+          let docs = [];
 
-    <template id="right-col-sample">
-      <style>
-        td[colspan] {
-          height: 32px;
-          position: relative;
-          padding-left: 42px;
-        }
-      </style>
-      <table border="1">
-        <tr>
-          <td colspan="2">
-            <slot name="preview"></slot>
-            <slot name="header"></slot>
-          </td>
-        </tr>
-        <tr>
-          <td><slot name="left-col"></slot></td>
-          <td><slot name="right-col"></slot></td>
-        </tr>
-      </table>
+          fragments.forEach(fragment => {
+            items = items.concat([].slice.call(fragment.querySelectorAll('sg-item')));
 
-      <sg-script>
-        currentHost.appendChild(currentHost.getPreview());
-      </sg-script>
-    </template>
+            document.body.appendChild(fragment);
+          });
 
-    <template id="sg-src">
-      <pre><code></code></pre>
-      <sg-script>
-        const lang = currentHost.getAttribute('lang') || 'html';
-        const code = currentRoot.querySelector('code');
+          requestAnimationFrame(() => {
+            let id = 0;
+            items.forEach(item => {
+              id++;
+              item.setAttribute('lunr-id', id);
 
-        code.innerHTML = hljs.highlight(lang, currentHost.innerHTML.trim()).value;
-      </sg-script>
-    </template>
+              docs.push({
+                type: item.meta.type,
+                body: item.texts.map(n => n.innerHTML).join('\n'),
+                sources: item.sources.map(n => n.innerHTML).join('\n'),
+                id: id,
+              });
+            });
 
-    <template id="sg-text">
-      <style type="text/css">
-        h3 {
-          margin: 0;
-        }
-      </style>
-      <div class="marked"></div>
-      <sg-script>
-        const code = currentRoot.querySelector('.marked');
-        let source = currentHost.innerHTML;
-        const match = source.match(/^[\n]*(\s+)/);
+            index = window.lunr(function() {
+              this.field('type', {boost: 10});
+              this.field('body');
+              this.field('sources', {boost: 2});
+              this.ref('id');
 
-        if (match) {
-          const [, baseIndent] = match;
-          source = source.replace(new RegExp(`^${baseIndent}`, 'gm'), '');
-        }
+              docs.forEach(doc => this.add(doc));
+            });
 
-        code.innerHTML = marked(source);
-      </sg-script>
-    </template>
+            console.log(index.search('buttons'));
+          });
+        });
+      };
 
-    <sg-item>
-      ### Some Button Example
-
-      This is a small example of a styleguide item with simple markdown description as well as a code sample in plain text and the remaining content as sample.
-
-      ```js
-      function foo () {
-        return 'foo';
-      }
-      ```
-
-      <button>Some text</button>
-    </sg-item>
-
-    <sg-group items-template="right-col-sample"
-              samples-slot="right-col"
-              texts-slot="left-col"
-              sources-slot="left-col"
-              previews-slot="preview">
-
-      <sg-item>
-        ### Some Button Example
-
-        This is a small example of a styleguide item with simple markdown description as well as a code sample in plain text and the remaining content as sample.
-
-        ```js
-        function foo () {
-          return 'foo';
-        }
-        ```
-
-        <button>Some text</button>
-      </sg-item>
-
-      <sg-item>
-        <sg-meta name="foo" content="bar"></sg-meta>
-
-        <sg-text slot="header">### Some title for a heavy setup</sg-text>
-        <sg-sample slot="right-col">
-          <p>lorem ipsum dolores</p>
-          <button>Some text</button>
-        </sg-sample>
-        <sg-text slot="left-col">
-          A longer example using a custom template and slots to place the content in different cells of a table. This time each components are explictely defined and assigned a `slot`.
-        </sg-text>
-        <sg-src lang="html" slot="left-col">
-          <button>Some text</button>
-        </sg-src>
-      </sg-item>
-    </sg-group>
-
+    </script>
   </body>
 </html>

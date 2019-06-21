@@ -1,0 +1,55 @@
+<sg-item>
+  ### Some Button Example
+
+  This is a small example of a styleguide item with simple markdown description as well as a code sample in plain text and the remaining content as sample.
+
+  ```js
+  function foo () {
+    return 'foo';
+  }
+  ```
+
+
+  <button>Some text</button>
+
+  <sg-meta name="type" content="buttons"></sg-meta>
+</sg-item>
+
+<sg-group items-template="right-col-sample"
+          samples-slot="right-col"
+          texts-slot="left-col"
+          sources-slot="left-col"
+          previews-slot="preview">
+
+  <sg-item>
+    ### Some Input Example
+
+    This is a small example of a styleguide item with simple markdown description as well as a code sample in plain text and the remaining content as sample.
+
+    ```js
+    function foo () {
+      return 'foo';
+    }
+    ```
+
+    <input type="text" value="Some text"></input>
+
+    <sg-meta name="type" content="inputs"></sg-meta>
+  </sg-item>
+
+  <sg-item>
+    <sg-meta name="type" content="buttons"></sg-meta>
+
+    <sg-text slot="header">### Some title for a heavy setup</sg-text>
+    <sg-sample slot="right-col">
+      <p>lorem ipsum dolores</p>
+      <button>Some text</button>
+    </sg-sample>
+    <sg-text slot="left-col">
+      A longer example using a custom template and slots to place the content in different cells of a table. This time each components are explictely defined and assigned a `slot`.
+    </sg-text>
+    <sg-src lang="html" slot="left-col">
+      <button>Some text</button>
+    </sg-src>
+  </sg-item>
+</sg-group>
