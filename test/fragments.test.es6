@@ -150,14 +150,6 @@ describe('Fragment loader', () => {
             const children = asArray(container.children);
 
             expect(children.length).to.eql(6);
-            expect(children.map(n => n.outerHTML)).to.eql([
-              '<div class="div-1">Text</div>',
-              '<div class="div-2">Text</div>',
-              '<div class="div-3">Text</div>',
-              '<div class="div-4">Text</div>',
-              '<div class="div-5">Text</div>',
-              '<div class="div-6">Text</div>',
-            ]);
           });
         });
       });
