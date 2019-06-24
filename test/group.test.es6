@@ -58,21 +58,73 @@ describe('GroupElement', () => {
           <sg-meta name="bool" content="true" type="boolean"></sg-meta>
           <sg-meta name="number" content="15.5" type="number"></sg-meta>
 
-          <sg-item>
-            <sg-meta name="bar" content="bars"></sg-meta>
-          </sg-item>
-          <div></div>
+          <sg-group>
+            <sg-meta name="number" content="18" type="number"></sg-meta>
+            <sg-meta name="string2" content="bar" type="string"></sg-meta>
+
+            <sg-item>
+              <sg-meta name="bar" content="bars"></sg-meta>
+            </sg-item>
+            <div></div>
+          </sg-group>
         </sg-group>
       `);
 
       group = getTestRoot().querySelector('sg-group');
     });
 
-    it('are used to set the group meta', () => {
+    it('builds an object for their parent', () => {
       expect(group.meta).to.eql({
         string: 'foo',
         bool: true,
         number: 15.5,
+      });
+    });
+
+    describe('for a nested group', () => {
+      it('inherits meta from its parent', () => {
+        const group2 = group.querySelector('sg-group');
+
+        expect(group2.meta).to.eql({
+          string: 'foo',
+          bool: true,
+          number: 18,
+          string2: 'bar',
+        });
+
+        expect(group.meta).to.eql({
+          string: 'foo',
+          bool: true,
+          number: 15.5,
+        });
+      });
+    });
+
+    describe('for a nested item', () => {
+      it('inherits meta from its parents', () => {
+        const group2 = group.querySelector('sg-group');
+        const item = group2.querySelector('sg-item');
+
+        expect(item.meta).to.eql({
+          string: 'foo',
+          bool: true,
+          number: 18,
+          string2: 'bar',
+          bar: 'bars',
+        });
+
+        expect(group2.meta).to.eql({
+          string: 'foo',
+          bool: true,
+          number: 18,
+          string2: 'bar',
+        });
+
+        expect(group.meta).to.eql({
+          string: 'foo',
+          bool: true,
+          number: 15.5,
+        });
       });
     });
   });
