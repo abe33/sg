@@ -190,3 +190,5 @@ Ultimately an item will either uses its own attributes or will reach the nearest
 |`texts-slot`|The target `slot` for an item's texts elements|
 |`sources-slot`|The target `slot` for an item's sources elements|
 |`previews-slot`|The target `slot` for an item's preview|
+
+Note that `sg-meta` tags in a group will also be shared by the children groups and items of that group.
