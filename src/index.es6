@@ -10,5 +10,5 @@ export {default as FragmentLoader} from './fragments';
 export {default as KeyStroke} from './utils/keystroke';
 export {default as KeyMap} from './utils/keymap';
 export {default as mix} from './utils/mix';
+export * from './mixins';
 
-export {* as mixins} from './mixins';
