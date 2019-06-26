@@ -7,7 +7,8 @@ export {default as ScriptElement} from './script';
 export {default as SourceElement} from './source';
 export {default as TextElement} from './text';
 export {default as FragmentLoader} from './fragments';
-export {default as mixins} from './mixins';
 export {default as KeyStroke} from './utils/keystroke';
 export {default as KeyMap} from './utils/keymap';
 export {default as mix} from './utils/mix';
+
+export {* as mixins} from './mixins';
