@@ -512,6 +512,24 @@ describe('ItemElement', () => {
         expect(preview.querySelectorAll('div').length).to.eql(1);
       });
     });
+
+    describe('when there is a preview-margins attribute', () => {
+      beforeEach(() => {
+        setPageContent(`
+        <sg-item preview-margins="1 2 3 4">
+          <sg-sample><div>foo</div></sg-sample>
+        </sg-item>
+        `);
+
+        item = getTestRoot().querySelector('sg-item');
+      });
+
+      it('returns a sg-preview object with the corresponding margins', () => {
+        const preview = item.getPreview();
+
+        expect(preview.getAttribute('margins')).to.eql('1 2 3 4');
+      });
+    });
   });
 
   describe('when a template is defined', () => {
