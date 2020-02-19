@@ -36,7 +36,7 @@
     "@babel/register": "^7.4.0",
     "babel-eslint": "^7.0.0",
     "babel-register": "^6.3.13",
-    "codecov": "^1.0.0",
+    "codecov": "^3.6.5",
     "esdoc": "^1.1.0",
     "eslint": "^3.11.1",
     "eslint-config": "^0.3.0",
