@@ -1,12 +1,15 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {waitsFor} from 'widjet-test-utils/async';
 
 const PreviewElement = customElements.get('sg-preview');
 
 describe('PreviewElement', () => {
+  jsdom({url: 'http://localhost'});
+
   it('wraps its content in a svg foreign object when added to the DOM', () => {
     setPageContent(`<sg-preview>
         <div>text</div>
@@ -24,16 +27,16 @@ describe('PreviewElement', () => {
       </sg-preview>`);
 
     return waitsFor(() => getTestRoot().querySelector('sg-preview svg'))
-    .then(() => {
-      const svg = getTestRoot().querySelector('sg-preview svg');
-      const sample = getTestRoot().querySelector('div');
-      const sampleBounds = sample.getBoundingClientRect();
+      .then(() => {
+        const svg = getTestRoot().querySelector('sg-preview svg');
+        const sample = getTestRoot().querySelector('div');
+        const sampleBounds = sample.getBoundingClientRect();
 
-      expect(svg.viewBox.baseVal.y).to.eql(0);
-      expect(svg.viewBox.baseVal.x).to.eql(0);
-      expect(svg.viewBox.baseVal.width).to.eql(sampleBounds.width);
-      expect(svg.viewBox.baseVal.height).to.eql(sampleBounds.height);
-    });
+        expect(svg.viewBox.baseVal.y).to.eql(0);
+        expect(svg.viewBox.baseVal.x).to.eql(0);
+        expect(svg.viewBox.baseVal.width).to.eql(sampleBounds.width);
+        expect(svg.viewBox.baseVal.height).to.eql(sampleBounds.height);
+      });
 
   });
 
@@ -45,16 +48,16 @@ describe('PreviewElement', () => {
       </sg-preview>`);
 
     return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
-    .then(() => {
-      const fo = getTestRoot().querySelector('sg-preview svg foreignObject');
-      const sample = getTestRoot().querySelector('div');
-      const sampleBounds = sample.getBoundingClientRect();
+      .then(() => {
+        const fo = getTestRoot().querySelector('sg-preview svg foreignObject');
+        const sample = getTestRoot().querySelector('div');
+        const sampleBounds = sample.getBoundingClientRect();
 
-      expect(fo.getAttribute('y')).to.eql('0');
-      expect(fo.getAttribute('x')).to.eql('0');
-      expect(fo.getAttribute('width')).to.eql(`${sampleBounds.width}`);
-      expect(fo.getAttribute('height')).to.eql(`${sampleBounds.height}`);
-    });
+        expect(fo.getAttribute('y')).to.eql('0');
+        expect(fo.getAttribute('x')).to.eql('0');
+        expect(fo.getAttribute('width')).to.eql(`${sampleBounds.width}`);
+        expect(fo.getAttribute('height')).to.eql(`${sampleBounds.height}`);
+      });
   });
 
   describe('with a margins attribute', () => {
@@ -67,14 +70,14 @@ describe('PreviewElement', () => {
           </sg-preview>`);
 
         return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
-        .then(() => {
-          const svg = getTestRoot().querySelector('sg-preview svg');
-          const sample = getTestRoot().querySelector('div');
-          const sampleBounds = sample.getBoundingClientRect();
+          .then(() => {
+            const svg = getTestRoot().querySelector('sg-preview svg');
+            const sample = getTestRoot().querySelector('div');
+            const sampleBounds = sample.getBoundingClientRect();
 
-          expect(svg.getAttribute('viewBox'))
-          .to.eql(`-5 -5 ${sampleBounds.width + 10} ${sampleBounds.height + 10}`);
-        });
+            expect(svg.getAttribute('viewBox'))
+              .to.eql(`-5 -5 ${sampleBounds.width + 10} ${sampleBounds.height + 10}`);
+          });
       });
     });
 
@@ -87,14 +90,14 @@ describe('PreviewElement', () => {
           </sg-preview>`);
 
         return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
-        .then(() => {
-          const svg = getTestRoot().querySelector('sg-preview svg');
-          const sample = getTestRoot().querySelector('div');
-          const sampleBounds = sample.getBoundingClientRect();
+          .then(() => {
+            const svg = getTestRoot().querySelector('sg-preview svg');
+            const sample = getTestRoot().querySelector('div');
+            const sampleBounds = sample.getBoundingClientRect();
 
-          expect(svg.getAttribute('viewBox'))
-          .to.eql(`-10 -5 ${sampleBounds.width + 20} ${sampleBounds.height + 10}`);
-        });
+            expect(svg.getAttribute('viewBox'))
+              .to.eql(`-10 -5 ${sampleBounds.width + 20} ${sampleBounds.height + 10}`);
+          });
       });
     });
 
@@ -107,14 +110,14 @@ describe('PreviewElement', () => {
           </sg-preview>`);
 
         return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
-        .then(() => {
-          const svg = getTestRoot().querySelector('sg-preview svg');
-          const sample = getTestRoot().querySelector('div');
-          const sampleBounds = sample.getBoundingClientRect();
+          .then(() => {
+            const svg = getTestRoot().querySelector('sg-preview svg');
+            const sample = getTestRoot().querySelector('div');
+            const sampleBounds = sample.getBoundingClientRect();
 
-          expect(svg.getAttribute('viewBox'))
-          .to.eql(`-10 -5 ${sampleBounds.width + 20} ${sampleBounds.height + 15}`);
-        });
+            expect(svg.getAttribute('viewBox'))
+              .to.eql(`-10 -5 ${sampleBounds.width + 20} ${sampleBounds.height + 15}`);
+          });
       });
     });
 
@@ -127,14 +130,14 @@ describe('PreviewElement', () => {
           </sg-preview>`);
 
         return waitsFor(() => getTestRoot().querySelector('sg-preview svg foreignObject'))
-        .then(() => {
-          const svg = getTestRoot().querySelector('sg-preview svg');
-          const sample = getTestRoot().querySelector('div');
-          const sampleBounds = sample.getBoundingClientRect();
+          .then(() => {
+            const svg = getTestRoot().querySelector('sg-preview svg');
+            const sample = getTestRoot().querySelector('div');
+            const sampleBounds = sample.getBoundingClientRect();
 
-          expect(svg.getAttribute('viewBox'))
-          .to.eql(`-10 -5 ${sampleBounds.width + 18} ${sampleBounds.height + 15}`);
-        });
+            expect(svg.getAttribute('viewBox'))
+              .to.eql(`-10 -5 ${sampleBounds.width + 18} ${sampleBounds.height + 15}`);
+          });
       });
     });
   });

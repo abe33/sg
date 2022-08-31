@@ -1,11 +1,14 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/source';
 
 describe('SourceElement', () => {
+  jsdom({url: 'http://localhost'});
+
   let src;
 
   describe('when no template is present', () => {
@@ -24,7 +27,7 @@ describe('SourceElement', () => {
 
     it('places the inner html sources in a pre and code tags', () => {
       expect(src.shadowRoot.innerHTML.trim())
-      .to.eql('<pre><code>&lt;div&gt;text&lt;/div&gt;</code></pre>');
+        .to.eql('<pre><code>&lt;div&gt;text&lt;/div&gt;</code></pre>');
     });
   });
 
@@ -53,7 +56,7 @@ describe('SourceElement', () => {
 
       it('inserts the template and executes the script in context', () => {
         expect(src.shadowRoot.querySelector('code').outerHTML)
-        .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
+          .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
       });
     });
 
@@ -81,7 +84,7 @@ describe('SourceElement', () => {
 
       it('inserts the template and executes the script in context', () => {
         expect(src.shadowRoot.querySelector('code').outerHTML)
-        .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
+          .to.eql('<code>&lt;div&gt;text&lt;/div&gt;</code>');
       });
     });
 
@@ -98,7 +101,7 @@ describe('SourceElement', () => {
       it('appends a notice message regarding the template in the ', () => {
         expect(src.innerHTML.trim()).to.eql('<div>text</div>');
         expect(src.shadowRoot.innerHTML)
-        .to.eql(`
+          .to.eql(`
         <slot></slot>
         <span style="color: orange;">The specified template #other-src was not found.</span>`);
       });

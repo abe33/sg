@@ -1,11 +1,14 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/sample';
 
 describe('SampleElement', () => {
+  jsdom({url: 'http://localhost'});
+
   let sample;
 
   describe('when no template is present', () => {
@@ -66,9 +69,9 @@ describe('SampleElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
           expect(sample.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #sg-sample template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #sg-sample template was found but it didn\'t have a slot.</span>`);
         });
       });
     });
@@ -115,9 +118,9 @@ describe('SampleElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
           expect(sample.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #other-sample template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #other-sample template was found but it didn\'t have a slot.</span>`);
         });
       });
 
@@ -134,10 +137,10 @@ describe('SampleElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
           expect(sample.shadowRoot.innerHTML)
-          .to.eql(`
-        <slot></slot>
-        <span style="color: orange;">The specified template #other-sample was not found.</span>`);
-        });
+            .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">The specified template #other-sample was not found.</span>`);
+          });
       });
     });
   });

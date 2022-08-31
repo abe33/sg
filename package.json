@@ -5,15 +5,15 @@
   "main": "lib/index.js",
   "jsnext:main": "src/index.es6",
   "scripts": {
-    "test": "nyc mocha --timeout 5000 --recursive --compilers js:babel-register test/**/*.test.es6 test/*.test.es6",
+    "test": "nyc mocha --timeout 5000 test/**/*.test.es6",
     "lcov_report": "nyc report --reporter=lcov",
     "coverage": "npm run lcov_report && codecov",
+    "babel": "babel src --out-dir lib",
     "lint": "eslint src/*.es6 test/*.es6",
     "lint:fix": "eslint --fix src/*.es6 test/*.es6",
     "esdoc": "esdoc -c esdoc.json",
-    "prepublishOnly": "npm run rollup",
-    "rollup": "rollup -c",
-    "start": "widjet-test-server test/*.test.es6"
+    "prepublishOnly": "npm run babel",
+    "start": "widjet-test-server test/**/*-test.es6"
   },
   "keywords": [
     "widgets",
@@ -34,45 +34,32 @@
     "@babel/core": "^7.2.3",
     "@babel/preset-env": "^7.4.2",
     "@babel/register": "^7.4.0",
-    "babel-eslint": "^7.0.0",
-    "babel-register": "^6.3.13",
+    "babel-eslint": "^10.0.0",
     "codecov": "^1.0.0",
     "esdoc": "^1.1.0",
-    "eslint": "^3.11.1",
+    "eslint": "^8.0.0",
     "eslint-config": "^0.3.0",
-    "eslint-config-fbjs": "^1.1.1",
-    "eslint-plugin-babel": "^3.3.0",
-    "eslint-plugin-flowtype": "^2.29.1",
-    "eslint-plugin-jasmine": "^2.2.0",
+    "eslint-config-fbjs": "^4.0.0",
+    "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-prefer-object-spread": "^1.1.0",
-    "eslint-plugin-react": "^5.2.2",
     "expect.js": "^0.3.1",
     "fbjs": "^0.8.6",
     "jsdom": "^9.8.3",
-    "mocha": "^5.2.0",
-    "mocha-jsdom": "^1.1.0",
-    "nyc": "^13.1.0",
-    "rollup": "^1.0.0",
-    "rollup-plugin-includepaths": "^0.2",
-    "rollup-plugin-node-resolve": "^2.0.0",
+    "mocha": "^6.0.2",
+    "mocha-jsdom": "^2.0.0",
+    "nyc": "^13.3.0",
     "sinon": "^1.17.4",
-    "widjet-test-utils": "^1.10.1"
+    "widjet-test-utils": "^1.9.1"
   },
   "dependencies": {
-    "widjet-disposables": "^0.1.7",
-    "widjet-utils": "^0.6.0"
-  },
-  "standard": {
-    "parser": "babel-eslint",
-    "globals": [
-      "it",
-      "describe",
-      "beforeEach",
-      "afterEach"
-    ]
+    "widjet-disposables": "^1.0.0",
+    "widjet-utils": "^1.1.0"
   },
   "babel": {
-    "sourceMaps": "inline",
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [],
     "env": {
       "test": {
         "plugins": [
@@ -89,7 +76,7 @@
       ".es6"
     ],
     "require": [
-      "babel-register"
+      "@babel/register"
     ]
   }
 }

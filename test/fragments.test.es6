@@ -1,12 +1,13 @@
 'use strict';
-
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {asArray} from 'widjet-utils';
 import {setPageContent} from 'widjet-test-utils/dom';
 
 import FragmentLoader from '../src/fragments';
 
 describe('Fragment loader', () => {
+  jsdom({url: 'http://localhost'});
   let loader;
 
   beforeEach(() => {
@@ -43,8 +44,7 @@ describe('Fragment loader', () => {
 
       it('returns a promise that will be rejected', () => {
         return promise
-        .then(() => { throw new Error('Expected promise to reject'); },
-              () => {});
+          .then(() => { throw new Error('Expected promise to reject'); }, () => {});
       });
     });
 
@@ -80,8 +80,9 @@ describe('Fragment loader', () => {
 
         it('returns a promise that will be rejected', () => {
           return promise
-          .then(() => { throw new Error('Expected promise to reject'); },
-                () => {});
+            .then(
+              () => { throw new Error('Expected promise to reject'); },
+              () => {});
         });
       });
     });
@@ -128,8 +129,9 @@ describe('Fragment loader', () => {
 
       it('returns a promise that will be rejected', () => {
         return promise
-        .then(() => { throw new Error('Expected promise to reject'); },
-              () => {});
+          .then(
+            () => { throw new Error('Expected promise to reject'); },
+            () => {});
       });
     });
 
@@ -166,8 +168,9 @@ describe('Fragment loader', () => {
 
         it('returns a promise that will be rejected', () => {
           return promise
-          .then(() => { throw new Error('Expected promise to reject'); },
-                () => {});
+            .then(
+              () => { throw new Error('Expected promise to reject'); },
+              () => {});
         });
       });
     });

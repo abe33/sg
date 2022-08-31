@@ -1,6 +1,7 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {getNode} from 'widjet-utils';
 
@@ -9,6 +10,8 @@ import '../src/item';
 const asSource = a => a.map(e => e.outerHTML);
 
 describe('ItemElement', () => {
+  jsdom({url: 'http://localhost'});
+
   let item;
   describe('with plain html content', () => {
     beforeEach(() => {
@@ -23,10 +26,10 @@ describe('ItemElement', () => {
 
     it('stores its content as both sample and source', () => {
       expect(asSource(item.samples))
-      .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+        .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
 
       expect(asSource(item.sources))
-      .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
+        .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
 
       expect(item.texts).to.eql([]);
 
@@ -49,15 +52,15 @@ describe('ItemElement', () => {
     describe('setting its innerHTML', () => {
       it('makes the item gather its data', () => {
         expect(asSource(item.samples))
-        .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
+          .to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
 
         expect(asSource(item.sources))
-        .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
+          .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
 
         expect(asSource(item.texts))
-        .to.eql([`<sg-text>
-            Some text
-            </sg-text>`]);
+          .to.eql([`<sg-text>
+              Some text
+              </sg-text>`]);
 
         expect(item.innerHTML).to.eql([
           `<sg-text>
@@ -580,9 +583,9 @@ describe('ItemElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
           expect(item.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #sg-item template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #sg-item template was found but it didn\'t have a slot.</span>`);
         });
       });
     });
@@ -629,9 +632,9 @@ describe('ItemElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
           expect(item.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #other-item template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #other-item template was found but it didn\'t have a slot.</span>`);
         });
       });
 
@@ -648,9 +651,9 @@ describe('ItemElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
           expect(item.shadowRoot.innerHTML)
-          .to.eql(`
-        <slot></slot>
-        <span style="color: orange;">The specified template #other-item was not found.</span>`);
+            .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">The specified template #other-item was not found.</span>`);
         });
       });
     });

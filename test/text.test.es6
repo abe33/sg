@@ -1,11 +1,14 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/text';
 
 describe('TextElement', () => {
+  jsdom({url: 'http://localhost'});
+
   let text;
 
   describe('when no template is present', () => {
@@ -50,7 +53,7 @@ describe('TextElement', () => {
 
         it('inserts the template and executes the script in context', () => {
           expect(text.shadowRoot.querySelector('p').outerHTML)
-          .to.eql('<p><em>Some text</em></p>');
+            .to.eql('<p><em>Some text</em></p>');
         });
       });
 
@@ -118,9 +121,9 @@ describe('TextElement', () => {
       it('appends a notice message regarding the template in the ', () => {
         expect(text.innerHTML.trim()).to.eql('<em>Some text</em>');
         expect(text.shadowRoot.innerHTML)
-        .to.eql(`
-        <slot></slot>
-        <span style="color: orange;">The specified template #other-text was not found.</span>`);
+          .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">The specified template #other-text was not found.</span>`);
       });
     });
   });

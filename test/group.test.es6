@@ -1,11 +1,14 @@
 'use strict';
 
 import expect from 'expect.js';
+import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/group';
 
 describe('GroupElement', () => {
+  jsdom({url: 'http://localhost'});
+
   let group;
 
   [
@@ -187,9 +190,9 @@ describe('GroupElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
           expect(group.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #sg-group template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #sg-group template was found but it didn\'t have a slot.</span>`);
         });
       });
     });
@@ -236,9 +239,9 @@ describe('GroupElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
           expect(group.shadowRoot.innerHTML)
-          .to.eql(`
-          <slot></slot>
-          <span style="color: orange;">A #other-group template was found but it didn\'t have a slot.</span>`);
+            .to.eql(`
+            <slot></slot>
+            <span style="color: orange;">A #other-group template was found but it didn\'t have a slot.</span>`);
         });
       });
 
@@ -255,9 +258,9 @@ describe('GroupElement', () => {
         it('appends a notice message regarding the template in the ', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
           expect(group.shadowRoot.innerHTML)
-          .to.eql(`
-        <slot></slot>
-        <span style="color: orange;">The specified template #other-group was not found.</span>`);
+            .to.eql(`
+          <slot></slot>
+          <span style="color: orange;">The specified template #other-group was not found.</span>`);
         });
       });
     });
