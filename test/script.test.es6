@@ -1,12 +1,10 @@
 'use strict';
-
-import '../src/script';
-
 import sinon from 'sinon';
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {waitsFor} from 'widjet-test-utils/async';
 
+import '../src/script';
 
 describe('ScriptElement', () => {
   let script;
