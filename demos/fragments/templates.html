@@ -30,6 +30,12 @@
     const lang = currentHost.getAttribute('lang') || 'html';
     const code = currentRoot.querySelector('code');
 
+    const css = document.createElement('link');
+    css.type = 'text/css';
+    css.rel = 'stylesheet';
+    css.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/stackoverflow-light.min.css';
+    currentRoot.appendChild(css);
+
     code.innerHTML = hljs.highlight(lang, currentHost.innerHTML.trim()).value;
   </sg-script>
 </template>
