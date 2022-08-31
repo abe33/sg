@@ -1,14 +1,11 @@
 'use strict';
 
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/group';
 
 describe('GroupElement', () => {
-  jsdom({url: 'http://localhost'});
-
   let group;
 
   [

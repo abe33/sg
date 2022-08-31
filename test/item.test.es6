@@ -1,7 +1,6 @@
 'use strict';
 
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {getNode} from 'widjet-utils';
 
@@ -10,9 +9,8 @@ import '../src/item';
 const asSource = a => a.map(e => e.outerHTML);
 
 describe('ItemElement', () => {
-  jsdom({url: 'http://localhost'});
-
   let item;
+
   describe('with plain html content', () => {
     beforeEach(() => {
       setPageContent(`

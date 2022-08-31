@@ -1,13 +1,11 @@
 'use strict';
 
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/source';
 
 describe('SourceElement', () => {
-  jsdom({url: 'http://localhost'});
 
   let src;
 

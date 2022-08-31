@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix src/*.es6 test/*.es6",
     "esdoc": "esdoc -c esdoc.json",
     "prepublishOnly": "npm run babel",
-    "start": "widjet-test-server test/**/*-test.es6"
+    "start": "widjet-test-server test/**/*.test.es6"
   },
   "keywords": [
     "widgets",
@@ -44,9 +44,7 @@
     "eslint-plugin-prefer-object-spread": "^1.1.0",
     "expect.js": "^0.3.1",
     "fbjs": "^0.8.6",
-    "jsdom": "^9.8.3",
     "mocha": "^6.0.2",
-    "mocha-jsdom": "^2.0.0",
     "nyc": "^13.3.0",
     "sinon": "^1.17.4",
     "widjet-test-utils": "^1.9.1"

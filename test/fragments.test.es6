@@ -1,13 +1,11 @@
 'use strict';
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {asArray} from 'widjet-utils';
 import {setPageContent} from 'widjet-test-utils/dom';
 
 import FragmentLoader from '../src/fragments';
 
 describe('Fragment loader', () => {
-  jsdom({url: 'http://localhost'});
   let loader;
 
   beforeEach(() => {

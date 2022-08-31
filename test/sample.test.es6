@@ -1,14 +1,11 @@
 'use strict';
 
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 
 import '../src/sample';
 
 describe('SampleElement', () => {
-  jsdom({url: 'http://localhost'});
-
   let sample;
 
   describe('when no template is present', () => {

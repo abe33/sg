@@ -1,14 +1,12 @@
 'use strict';
 
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {waitsFor} from 'widjet-test-utils/async';
 
 const PreviewElement = customElements.get('sg-preview');
 
 describe('PreviewElement', () => {
-  jsdom({url: 'http://localhost'});
 
   it('wraps its content in a svg foreign object when added to the DOM', () => {
     setPageContent(`<sg-preview>

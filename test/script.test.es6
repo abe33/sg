@@ -4,14 +4,11 @@ import '../src/script';
 
 import sinon from 'sinon';
 import expect from 'expect.js';
-import jsdom from 'mocha-jsdom';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {waitsFor} from 'widjet-test-utils/async';
 
 
 describe('ScriptElement', () => {
-  jsdom({url: 'http://localhost'});
-
   let script;
 
   beforeEach(() => {
