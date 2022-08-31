@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {ignoreHTMLSpaces} from './helpers';
 
 import '../src/sample';
 
@@ -65,10 +66,10 @@ describe('SampleElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(sample.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(sample.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
             <slot></slot>
-            <span style="color: orange;">A #sg-sample template was found but it didn\'t have a slot.</span>`);
+            <span style="color: orange;">A #sg-sample template was found but it didn\'t have a slot.</span>`));
         });
       });
     });
@@ -114,10 +115,10 @@ describe('SampleElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(sample.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(sample.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
             <slot></slot>
-            <span style="color: orange;">A #other-sample template was found but it didn\'t have a slot.</span>`);
+            <span style="color: orange;">A #other-sample template was found but it didn\'t have a slot.</span>`));
         });
       });
 
@@ -133,10 +134,10 @@ describe('SampleElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(sample.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(sample.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(sample.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
           <slot></slot>
-          <span style="color: orange;">The specified template #other-sample was not found.</span>`);
+          <span style="color: orange;">The specified template #other-sample was not found.</span>`));
           });
       });
     });

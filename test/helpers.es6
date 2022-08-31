@@ -32,3 +32,7 @@ expect.Assertion.prototype.matchKey = function match(key, modifiers) {
 
   return this;
 };
+
+export function ignoreHTMLSpaces(s) {
+  return s.replace(/(>)\s+|\s+(<)/gm, (m, a, b) => a || b);
+}

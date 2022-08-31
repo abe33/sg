@@ -33,7 +33,7 @@ describe('ScriptElement', () => {
 
   describe('when it has a src attribute', () => {
     beforeEach(() => {
-      setPageContent('<sg-script src="/test/fixtures/script.es6"></sg-script>');
+      setPageContent('<sg-script src="/test/fixtures/script.js"></sg-script>');
 
       script = getTestRoot().querySelector('sg-script');
       const loadSpy = sinon.spy();

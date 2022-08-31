@@ -3,10 +3,11 @@
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
 import {getNode} from 'widjet-utils';
+import {ignoreHTMLSpaces} from './helpers';
 
 import '../src/item';
 
-const asSource = a => a.map(e => e.outerHTML);
+const asSource = a => a.map(e => ignoreHTMLSpaces(e.outerHTML));
 
 describe('ItemElement', () => {
   let item;
@@ -43,8 +44,8 @@ describe('ItemElement', () => {
       item = document.createElement('sg-item');
 
       item.innerHTML = `
-            Some text
-            <div class="dummy"></div>`;
+        Some text
+        <div class="dummy"></div>`;
     });
 
     describe('setting its innerHTML', () => {
@@ -56,17 +57,12 @@ describe('ItemElement', () => {
           .to.eql(['<sg-src lang="html"><div class="dummy"></div></sg-src>']);
 
         expect(asSource(item.texts))
-          .to.eql([`<sg-text>
-              Some text
-              </sg-text>`]);
+          .to.eql([`<sg-text>Some text</sg-text>`]);
 
-        expect(item.innerHTML).to.eql([
-          `<sg-text>
-            Some text
-            </sg-text>`,
-          '<sg-sample><div class="dummy"></div></sg-sample>',
-          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
-        ].join(''));
+        expect(ignoreHTMLSpaces(item.innerHTML)).to.eql(ignoreHTMLSpaces(`
+          <sg-text>Some text</sg-text>
+          <sg-sample><div class="dummy"></div></sg-sample>
+          <sg-src lang="html"><div class="dummy"></div></sg-src>`));
       });
     });
   });
@@ -269,11 +265,10 @@ describe('ItemElement', () => {
         it('adds sg-meta as part of the meta object', () => {
           item.insertBefore(getNode('<sg-meta name="foo" content="bar"></sg-meta>'), item.firstChild);
 
-          expect(item.innerHTML).to.eql([
-            '<sg-meta name="foo" content="bar"></sg-meta>',
-            '<sg-sample><div class="dummy"></div></sg-sample>',
-            '<sg-src lang="html"><div class="dummy"></div></sg-src>',
-          ].join(''));
+          expect(item.innerHTML).to.eql(ignoreHTMLSpaces(`
+            <sg-meta name="foo" content="bar"></sg-meta>
+            <sg-sample><div class="dummy"></div></sg-sample>
+            <sg-src lang="html"><div class="dummy"></div></sg-src>`));
 
           expect(item.meta).to.eql({foo: 'bar'});
         });
@@ -302,31 +297,22 @@ describe('ItemElement', () => {
       it('uses the first sample as source', () => {
         expect(asSource(item.samples)).to.eql([
           '<sg-sample><div class="dummy"></div></sg-sample>',
-          `<sg-sample>
-              <div></div>
-            </sg-sample>`,
+          '<sg-sample><div></div></sg-sample>',
         ]);
+
         expect(asSource(item.sources)).to.eql([
           '<sg-src lang="html"><div class="dummy"></div></sg-src>',
         ]);
 
         expect(asSource(item.texts)).to.eql([
-          `<sg-text>
-            Some text content
+          '<sg-text>Some text content</sg-text>'
+        ]);
 
-            </sg-text>`]);
-
-        expect(item.innerHTML).to.eql([
-          `<sg-text>
-            Some text content
-
-            </sg-text>`,
-          '<sg-sample><div class="dummy"></div></sg-sample>',
-          `<sg-sample>
-              <div></div>
-            </sg-sample>`,
-          '<sg-src lang="html"><div class="dummy"></div></sg-src>',
-        ].join(''));
+        expect(ignoreHTMLSpaces(item.innerHTML)).to.eql(ignoreHTMLSpaces(`
+          <sg-text>Some text content</sg-text>
+          <sg-sample><div class="dummy"></div></sg-sample>
+          <sg-sample><div></div></sg-sample>
+          <sg-src lang="html"><div class="dummy"></div></sg-src>`));
       });
     });
 
@@ -348,23 +334,22 @@ describe('ItemElement', () => {
       });
 
       it('stores its content as both sample and source', () => {
-        expect(asSource(item.samples)).to.eql(['<sg-sample><div class="dummy"></div></sg-sample>']);
-        expect(asSource(item.sources)).to.eql([`<sg-src>
-              <div></div>
-            </sg-src>`]);
-        expect(asSource(item.texts)).to.eql([`<sg-text>
-            Some text content
+        expect(asSource(item.samples)).to.eql([
+          '<sg-sample><div class="dummy"></div></sg-sample>'
+        ]);
 
-            </sg-text>`]);
-        expect(item.innerHTML).to.eql([
-          `<sg-text>
-            Some text content
+        expect(asSource(item.sources)).to.eql([
+          '<sg-src><div></div></sg-src>'
+        ]);
 
-            </sg-text>`,
+        expect(asSource(item.texts)).to.eql([
+          '<sg-text>Some text content</sg-text>'
+        ]);
+
+        expect(ignoreHTMLSpaces(item.innerHTML)).to.eql([
+          '<sg-text>Some text content</sg-text>',
           '<sg-sample><div class="dummy"></div></sg-sample>',
-          `<sg-src>
-              <div></div>
-            </sg-src>`,
+          '<sg-src><div></div></sg-src>',
         ].join(''));
       });
     });
@@ -392,25 +377,22 @@ describe('ItemElement', () => {
     });
 
     it('stores its content as both sample and source', () => {
-      expect(asSource(item.samples)).to.eql([`<sg-sample>
-            <div class="dummy"></div>
-          </sg-sample>`]);
-      expect(asSource(item.sources)).to.eql([`<sg-src>
-            <div></div>
-          </sg-src>`]);
-      expect(asSource(item.texts)).to.eql([`<sg-text>
-            Some text content
-          </sg-text>`]);
-      expect(item.innerHTML).to.eql([
-        `<sg-sample>
-            <div class="dummy"></div>
-          </sg-sample>`,
-        `<sg-text>
-            Some text content
-          </sg-text>`,
-        `<sg-src>
-            <div></div>
-          </sg-src>`,
+      expect(asSource(item.samples)).to.eql([
+        `<sg-sample><div class="dummy"></div></sg-sample>`
+      ]);
+
+      expect(asSource(item.sources)).to.eql([
+        `<sg-src><div></div></sg-src>`
+      ]);
+
+      expect(asSource(item.texts)).to.eql([
+        `<sg-text>Some text content</sg-text>`
+      ]);
+
+      expect(ignoreHTMLSpaces(item.innerHTML)).to.eql([
+        `<sg-sample><div class="dummy"></div></sg-sample>`,
+        `<sg-text>Some text content</sg-text>`,
+        `<sg-src><div></div></sg-src>`,
       ].join(''));
     });
 
@@ -433,16 +415,10 @@ describe('ItemElement', () => {
 
       item = getTestRoot().querySelector('sg-item');
 
-      expect(item.innerHTML).to.eql([
-        `<sg-sample foo="bar">
-            <div class="dummy"></div>
-          </sg-sample>`,
-        `<sg-text foo="bar">
-            Some text content
-          </sg-text>`,
-        `<sg-src foo="bar">
-            <div></div>
-          </sg-src>`,
+      expect(ignoreHTMLSpaces(item.innerHTML)).to.eql([
+        `<sg-sample foo="bar"><div class="dummy"></div></sg-sample>`,
+        `<sg-text foo="bar">Some text content</sg-text>`,
+        `<sg-src foo="bar"><div></div></sg-src>`,
       ].join(''));
     });
   });
@@ -580,10 +556,10 @@ describe('ItemElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
-          expect(item.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(item.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
             <slot></slot>
-            <span style="color: orange;">A #sg-item template was found but it didn\'t have a slot.</span>`);
+            <span style="color: orange;">A #sg-item template was found but it didn\'t have a slot.</span>`));
         });
       });
     });
@@ -629,10 +605,10 @@ describe('ItemElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
-          expect(item.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(item.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
             <slot></slot>
-            <span style="color: orange;">A #other-item template was found but it didn\'t have a slot.</span>`);
+            <span style="color: orange;">A #other-item template was found but it didn\'t have a slot.</span>`));
         });
       });
 
@@ -648,10 +624,10 @@ describe('ItemElement', () => {
 
         it('appends a notice message regarding the template in the ', () => {
           expect(item.innerHTML.trim()).to.eql(itemContent);
-          expect(item.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(item.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
           <slot></slot>
-          <span style="color: orange;">The specified template #other-item was not found.</span>`);
+          <span style="color: orange;">The specified template #other-item was not found.</span>`));
         });
       });
     });

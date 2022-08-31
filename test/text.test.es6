@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {ignoreHTMLSpaces} from './helpers';
 
 import '../src/text';
 
@@ -117,10 +118,10 @@ describe('TextElement', () => {
 
       it('appends a notice message regarding the template in the ', () => {
         expect(text.innerHTML.trim()).to.eql('<em>Some text</em>');
-        expect(text.shadowRoot.innerHTML)
-          .to.eql(`
+        expect(ignoreHTMLSpaces(text.shadowRoot.innerHTML))
+          .to.eql(ignoreHTMLSpaces(`
           <slot></slot>
-          <span style="color: orange;">The specified template #other-text was not found.</span>`);
+          <span style="color: orange;">The specified template #other-text was not found.</span>`));
       });
     });
   });

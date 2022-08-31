@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {ignoreHTMLSpaces} from './helpers';
 
 import '../src/group';
 
@@ -184,12 +185,12 @@ describe('GroupElement', () => {
           group = getTestRoot().querySelector('sg-group');
         });
 
-        it('appends a notice message regarding the template in the ', () => {
+        it('appends a notice message regarding the missing template', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(group.shadowRoot.innerHTML)
-            .to.eql(`
-            <slot></slot>
-            <span style="color: orange;">A #sg-group template was found but it didn\'t have a slot.</span>`);
+          expect(ignoreHTMLSpaces(group.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
+              <slot></slot>
+              <span style="color: orange;">A #sg-group template was found but it didn\'t have a slot.</span>`));
         });
       });
     });
@@ -233,12 +234,12 @@ describe('GroupElement', () => {
           group = getTestRoot().querySelector('sg-group');
         });
 
-        it('appends a notice message regarding the template in the ', () => {
+        it('appends a notice message regarding the missing template', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(group.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(group.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
             <slot></slot>
-            <span style="color: orange;">A #other-group template was found but it didn\'t have a slot.</span>`);
+            <span style="color: orange;">A #other-group template was found but it didn\'t have a slot.</span>`));
         });
       });
 
@@ -252,12 +253,12 @@ describe('GroupElement', () => {
           group = getTestRoot().querySelector('sg-group');
         });
 
-        it('appends a notice message regarding the template in the ', () => {
+        it('appends a notice message regarding the missing template', () => {
           expect(group.innerHTML.trim()).to.eql('<div>text</div>');
-          expect(group.shadowRoot.innerHTML)
-            .to.eql(`
+          expect(ignoreHTMLSpaces(group.shadowRoot.innerHTML))
+            .to.eql(ignoreHTMLSpaces(`
           <slot></slot>
-          <span style="color: orange;">The specified template #other-group was not found.</span>`);
+          <span style="color: orange;">The specified template #other-group was not found.</span>`));
         });
       });
     });
