@@ -20,6 +20,11 @@
         border: 1px solid slategray;
         padding: 0.2em 0.6em;
       }
+      @media(max-width: 600px) {
+        button {
+          background: red;
+        }
+      }
       sg-preview {
         display: inline-block;
         vertical-align: middle;
@@ -34,6 +39,24 @@
       }
       sg-preview * {
         font-family: 'Redacted';
+      }
+
+      sg-item {
+        border: 1px solid gray;
+        padding: 5px;
+      }
+
+      sg-group sg-item {
+        border: none;
+        padding: 0px;
+      }
+
+      sg-item, sg-group {
+        display: block;
+      }
+
+      sg-item + sg-item, sg-item + sg-group, sg-group + sg-item, sg-group + sg-group {
+        margin-top: 20px;
       }
     </style>
   </head>
