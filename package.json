@@ -8,11 +8,11 @@
     "test": "nyc mocha --timeout 5000 test/**/*.test.es6",
     "lcov_report": "nyc report --reporter=lcov",
     "coverage": "npm run lcov_report && codecov",
-    "babel": "babel src --out-dir lib",
     "lint": "eslint src/*.es6 test/*.es6",
     "lint:fix": "eslint --fix src/*.es6 test/*.es6",
     "esdoc": "esdoc -c esdoc.json",
-    "prepublishOnly": "npm run babel",
+    "prepublishOnly": "npm run rollup",
+    "rollup": "rollup -c",
     "start": "widjet-test-server test/**/*.test.es6"
   },
   "keywords": [
@@ -46,6 +46,7 @@
     "fbjs": "^0.8.6",
     "mocha": "^6.0.2",
     "nyc": "^13.3.0",
+    "rollup": "^1.0.0",
     "sinon": "^1.17.4",
     "widjet-test-utils": "^1.9.1"
   },
