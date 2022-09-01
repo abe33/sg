@@ -8,10 +8,15 @@ import FragmentLoader from '../src/fragments';
 describe('Fragment loader', () => {
   let loader;
 
+
   beforeEach(() => {
     setPageContent('');
     loader = new FragmentLoader();
   });
+
+  afterEach(() => {
+    loader.clearCache();
+  })
 
   describe('loading a single file', () => {
     let promise;
@@ -31,6 +36,23 @@ describe('Fragment loader', () => {
             '<div class="div-2">Text</div>',
             '<div class="div-3">Text</div>',
           ]);
+        });
+      });
+
+      describe('loading the same file again', () => {
+        let originalFragment;
+        beforeEach(() => {
+          return promise.then(f => originalFragment = f);
+        });
+
+        beforeEach(() => {
+          promise = loader.load('./test/fixtures/fragment.html');
+        });
+
+        it('does not query the file a second time', () => {
+          return promise.then(fragment => {
+            expect(fragment).to.be(originalFragment);
+          });
         });
       });
     });
