@@ -11,7 +11,9 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
     super();
 
     if (this.hasAttribute('iframe')) {
-      this.buildIframe();
+      requestAnimationFrame(() => {
+        this.buildIframe();
+      });
     }
 
     this.consumeTemplate({
@@ -63,6 +65,7 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
     }
 
     const frame = this.querySelector('iframe');
+    console.log(frame);
     frame.contentDocument.open();
     frame.contentDocument.write(html);
     frame.contentDocument.close();

@@ -2,6 +2,7 @@
 
 import expect from 'expect.js';
 import {setPageContent, getTestRoot} from 'widjet-test-utils/dom';
+import {waitsFor} from 'widjet-test-utils/async';
 import {ignoreHTMLSpaces} from './helpers';
 
 import '../src/sample';
@@ -151,6 +152,7 @@ describe('SampleElement', () => {
           </sg-sample`);
 
         sample = getTestRoot().querySelector('sg-sample');
+        return waitsFor(() => sample.querySelector('iframe'));
       });
 
       it('creates an iframe in the content', () => {
@@ -178,6 +180,7 @@ describe('SampleElement', () => {
             </sg-sample`);
 
         sample = getTestRoot().querySelector('sg-sample');
+        return waitsFor(() => sample.querySelector('iframe'));
       });
 
       it('creates an iframe in the content', () => {
@@ -210,6 +213,7 @@ describe('SampleElement', () => {
             </sg-sample`);
 
           sample = getTestRoot().querySelector('sg-sample');
+          return waitsFor(() => sample.querySelector('iframe'));
         });
 
         it('writes the item content in the iframe at the slot position', () => {
@@ -232,6 +236,7 @@ describe('SampleElement', () => {
             </sg-sample`);
 
           sample = getTestRoot().querySelector('sg-sample');
+          return waitsFor(() => sample.querySelector('iframe'));
         });
 
         it('writes a warning in the iframe content', () => {
@@ -261,6 +266,7 @@ describe('SampleElement', () => {
             </sg-sample`);
 
           sample = getTestRoot().querySelector('sg-sample');
+          return waitsFor(() => sample.querySelector('iframe'));
         });
 
         it('writes the item content in the iframe at the slot position', () => {
@@ -283,6 +289,7 @@ describe('SampleElement', () => {
             </sg-sample`);
 
           sample = getTestRoot().querySelector('sg-sample');
+          return waitsFor(() => sample.querySelector('iframe'));
         });
 
         it('writes a warning in the iframe content', () => {
@@ -304,6 +311,7 @@ describe('SampleElement', () => {
               </sg-sample`);
 
           sample = getTestRoot().querySelector('sg-sample');
+          return waitsFor(() => sample.querySelector('iframe'));
         });
 
         it('writes a warning in the iframe content', () => {
