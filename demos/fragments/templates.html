@@ -48,7 +48,7 @@
   </style>
   <div class="marked"></div>
   <sg-script>
-    const code = currentRoot.querySelector('.marked');
+    const markdown = currentRoot.querySelector('.marked');
     let source = currentHost.innerHTML;
     const match = source.match(/^[\n]*(\s+)/);
 
@@ -57,6 +57,19 @@
       source = source.replace(new RegExp(`^${baseIndent}`, 'gm'), '');
     }
 
-    code.innerHTML = marked(source);
+    markdown.innerHTML = marked(source);
+
+    [].slice.call(markdown.querySelectorAll('code')).forEach(function(code) {
+      const lang = code.className.replace('language-', '');
+      if(lang != '') {
+        const css = document.createElement('link');
+        css.type = 'text/css';
+        css.rel = 'stylesheet';
+        css.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/stackoverflow-light.min.css';
+        currentRoot.appendChild(css);
+
+        code.innerHTML = hljs.highlight(lang, code.innerHTML.trim()).value;
+      }
+    });
   </sg-script>
 </template>
