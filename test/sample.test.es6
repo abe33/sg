@@ -147,8 +147,12 @@ describe('SampleElement', () => {
     describe('with no template in the page', () => {
       beforeEach(() => {
         setPageContent(`
+          <style>
+            .sample { border: 1px solid black; }
+          </style>
+          <link rel="stylesheet" href="/test/fixtures/styles.css" type="text/css"/>
           <sg-sample iframe>
-            <div>text</div>
+            <div class="sample">text</div>
           </sg-sample`);
 
         sample = getTestRoot().querySelector('sg-sample');
@@ -162,7 +166,18 @@ describe('SampleElement', () => {
       it('writes the item content in the iframe', () => {
         const iframe = sample.querySelector('iframe');
 
-        expect(iframe.contentDocument.body.innerHTML.trim()).to.eql('<div>text</div>');
+        expect(iframe.contentDocument.body.innerHTML.trim()).to.eql('<div class="sample">text</div>');
+      });
+
+      it('clones all the page styles in the iframe head', () => {
+        const iframe = sample.querySelector('iframe');
+        expect(ignoreHTMLSpaces(iframe.contentDocument.head.innerHTML))
+          .to.eql(ignoreHTMLSpaces(`
+            <style>
+              .sample { border: 1px solid black; }
+            </style>
+            <link href="/mocha.css" rel="stylesheet" type="text/css">
+            <link rel="stylesheet" href="/test/fixtures/styles.css" type="text/css">`));
       });
     });
 

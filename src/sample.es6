@@ -1,5 +1,6 @@
 'use strict';
 
+import {asArray} from 'widjet-utils';
 import HasTemplate from './mixins/has-template';
 import getContentAsFragment from './utils/getContentAsFragment';
 import fragmentToString from './utils/fragmentToString';
@@ -33,6 +34,14 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
       : 'sg-sample/iframe';
     const tpl = document.getElementById(tplId);
 
+    const styles = asArray(document.querySelectorAll('style'));
+    const links = asArray(document.querySelectorAll('link[rel="stylesheet"]'));
+    let head = '';
+
+    if(styles.length) head += styles.map(s => s.outerHTML).join('');
+    if(links.length) head += links.map(l => l.outerHTML).join('');
+    if(head != '') head = `<head>${head}</head>`;
+
     if (tpl) {
       const templateContent = tpl.content.cloneNode(true);
       const slot = templateContent.querySelector('slot');
@@ -65,9 +74,8 @@ export default class SampleElement extends mix(HTMLElement).with(HasTemplate) {
     }
 
     const frame = this.querySelector('iframe');
-    console.log(frame);
     frame.contentDocument.open();
-    frame.contentDocument.write(html);
+    frame.contentDocument.write(`${head}${html}`);
     frame.contentDocument.close();
   }
 }
