@@ -1,3 +1,6 @@
+# SG, A StyleGuide lib
+
+Defines a series of custom elements that can be used to effortlessly build a style guide with code samples, previews and descriptions, while allowing to display previews in a responsive context through iframes.
 
 This library relies on [Custom Elements](https://www.caniuse.com/#feat=custom-elementsv1) and [Shadow DOM](https://www.caniuse.com/#feat=shadowdomv1). You can provide polyfills if you need to extend the support to other browsers.
 
